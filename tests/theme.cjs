@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'..','index.html'),'utf8');
+const elements={};const el=id=>elements[id]??=( {value:'',textContent:'',innerHTML:'',disabled:false,classList:{toggle(){}},options:[{text:'test'}],selectedIndex:0});
+const context={document:{querySelector:s=>el(s),querySelectorAll:()=>[]},window:{addEventListener(){}},console:{info(){},error(){},warn(){}},localStorage:{setItem(){},getItem(){return null},removeItem(){}},URLSearchParams,performance, setTimeout, clearTimeout,alert(){},confirm:()=>false,fetch:()=>{throw Error('Unexpected network')}};let theme,change;const media={matches:false,addEventListener:(event,fn)=>change=fn};context.window.matchMedia=()=>media;context.document.documentElement={setAttribute:(key,value)=>theme=value};vm.createContext(context);vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],context);
+const run=s=>vm.runInContext(s,context);
+assert.equal(theme,'light');
+run('applyTheme("dark")');assert.equal(theme,'dark');media.matches=false;change();assert.equal(theme,'dark');
+run('applyTheme("system")');assert.equal(theme,'light');media.matches=true;change();assert.equal(theme,'dark');
+run('applyTheme("light")');change();assert.equal(theme,'light');
+run('makeRows([{id:1,title:"Song (Clean)",artist:"Artist"}]);window.setAdvanced(true)');
+assert.match(run('reviewHTML(rows[0])'),/aria-describedby="version-help-1"/);assert.match(run('reviewHTML(rows[0])'),/not audio identification/);
+console.log('PASS: light/dark/system selection, live OS changes, explicit override, and version tooltip.');

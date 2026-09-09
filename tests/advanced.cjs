@@ -1,0 +1,20 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'..','index.html'),'utf8');
+const elements={};const el=id=>elements[id]??=( {value:'',textContent:'',innerHTML:'',disabled:false,classList:{toggle(){}},options:[{text:'test'}],selectedIndex:0});
+const context={document:{querySelector:s=>el(s),querySelectorAll:()=>[]},window:{addEventListener(){}},console:{info(){},error(){},warn(){}},localStorage:{setItem(){},getItem(){return null},removeItem(){}},URLSearchParams,performance, setTimeout, clearTimeout,alert(){},confirm:()=>false,fetch:()=>{throw Error('Unexpected network')}};vm.createContext(context);vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],context);
+const run=s=>vm.runInContext(s,context);
+(async()=>{
+context.document.querySelector=s=>{const x=el(s);x.querySelector=()=>null;return x};
+run('makeRows([{id:1,title:"Song (Clean)",artist:"Artist",year:0,tags:[]}]);rows[0].fields={};rows[0].reference={strAlbum:"Album"}');
+assert.equal(run('advanced'),false);assert.ok(!run('reviewHTML(rows[0])').includes('Use selected record'));
+run('window.fieldChoice(1,"AlbumTitle","record");window.setManual(1,"Label","Typed Label")');assert.equal(run('rows[0].fields.AlbumTitle'),undefined);assert.equal(run('rows[0].manual'),undefined);
+run('window.setAdvanced(true);window.setManual(1,"Label","Typed Label");window.fieldChoice(1,"Label","manual");window.setManual(1,"Year","2003");window.fieldChoice(1,"Year","manual")');assert.equal(run('chosenValue(rows[0],"Label")'),'Typed Label');
+run('window.setManual(1,"Title","Song")');assert.equal(run('rows[0].manual.Title'),undefined);
+run('rows[0].genreTags=["Pop",{label:"Soul",enabled:false}];window.allGenreTags(1,true)');assert.equal(run('selectedTags(rows[0]).length'),2);
+run('window.allGenreTags(1,false)');assert.equal(run('selectedTags(rows[0]).length'),0);
+run('async function patchTrack(id,p){globalThis.sent=p};window.decide(1,"accepted")');await run('applyOne(rows[0])');assert.deepEqual(JSON.parse(run('JSON.stringify(sent)')),{year:2003,label:'Typed Label'});
+run('rows[0].applied=false;window.setManual(1,"Year","bad")');assert.equal(run('invalidManual(rows[0])'),true);assert.equal(run('rows[0].decision'),'pending');await assert.rejects(run('applyOne(rows[0])'),/invalid typed/);
+run('window.setManual(1,"Year","2003");window.fieldChoice(1,"AlbumTitle","record");window.decide(1,"accepted");rememberRows();window.setAdvanced(false)');assert.equal(run('rows[0].fields.Year'),'current');assert.equal(run('rows[0].fields.AlbumTitle'),'current');assert.equal(run('rows[0].decision'),'pending');assert.equal(run('rows[0].manual.Year'),'2003');
+run('window.setAdvanced(true);window.setManual(1,"Label","");window.fieldChoice(1,"Label","manual")');await run('applyOne(rows[0])');assert.equal(run('sent.label'),'');
+console.log('PASS: Advanced gating, typed values, numeric validation, protected titles, tag select/clear all, approval reset, hidden selection reset, explicit text clearing and mocked writes.');
+})().catch(e=>{console.error(e);process.exit(1)});

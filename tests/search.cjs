@@ -1,0 +1,14 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'..','index.html'),'utf8');
+const elements={};const el=id=>elements[id]??=( {value:'',textContent:'',innerHTML:'',disabled:false,classList:{toggle(){}},options:[{text:'test'}],selectedIndex:0});
+const context={document:{querySelector:s=>el(s),querySelectorAll:()=>[]},window:{addEventListener(){}},console:{info(){},error(){},warn(){}},localStorage:{setItem(){},getItem(){return null},removeItem(){}},URLSearchParams,performance, setTimeout, clearTimeout,alert(){},confirm:()=>false,fetch:()=>{throw Error('Unexpected network')}};vm.createContext(context);vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],context);
+const run=s=>vm.runInContext(s,context);
+run('lexArtist.value="Beyonce";lexGenre.value="R&B";lexAlbum.value="Love"');
+let q=new URLSearchParams(run('searchQuery().toString()'));assert.equal(q.get('filter[genre]'),'R&B');assert.equal(q.get('filter[albumTitle]'),'Love');assert.equal(q.get('filter[artist]'),'Beyonce');
+run('parseTags({data:{categories:[],tags:[{id:1,label:"Reggae"},{id:2,label:"Roots Reggae"},{id:3,label:"House"}]}});lexTag.value="REGGAE"');
+q=new URLSearchParams(run('searchQuery().toString()'));assert.equal(q.get('filter[tags]'),'Reggae');
+run('lexTag.value="hous"');q=new URLSearchParams(run('searchQuery().toString()'));assert.equal(q.get('filter[tags]'),'House');
+run('lexTag.value="regg"');assert.throws(()=>run('searchQuery()'),/Several tags/);
+run('lexTag.value="unknown-tag"');assert.throws(()=>run('searchQuery()'),/No custom tag/);
+run('lexTag.value=""');assert.equal(new URLSearchParams(run('searchQuery().toString()')).has('filter[tags]'),false);
+console.log('PASS: combined search filters, album field mapping, exact and unique partial tag labels, ambiguous/missing tag errors, and blank tag omission.');

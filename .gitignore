@@ -1,0 +1,29 @@
+# Private configuration (only the example belongs in Git)
+.env
+.env.*
+.env-*
+!.env.example
+config.json
+.config-*
+
+# Personal library data and history
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+*.db
+*.db-*
+metadata-cache.sqlite3*
+change-history.json
+.history-*
+*.log
+*.csv
+
+# Runtime/editor/OS artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+.idea/
+.vscode/

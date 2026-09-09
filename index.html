@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lexicon Metadata Reviewer</title><link rel="icon" type="image/svg+xml" sizes="any" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%3E%0A%20%20%3Ccircle%20cx%3D%2228%22%20cy%3D%2228%22%20r%3D%2226%22%20fill%3D%22%23E74759%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2226%22%20cy%3D%2227%22%20r%3D%226%22%20fill%3D%22%23FFFFFF%22%2F%3E%0A%20%20%3Cg%20transform%3D%22rotate%2840%2047%2028%29%22%20stroke%3D%22%2315171C%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M43%2030h8v25a4%204%200%200%201-8%200Z%22%20fill%3D%22%23FFFFFF%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2234%22%20y%3D%2220%22%20width%3D%2226%22%20height%3D%2213%22%20rx%3D%222%22%20fill%3D%22%23FFFFFF%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E">
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#17191d}.wrap{max-width:1500px;margin:auto;padding:24px}h1{margin:0 0 6px;font-size:28px}p{color:#5f6570}.card{background:white;border:1px solid #e2e5e9;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 1px 2px #00000008}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.tabs{display:flex;gap:8px}.tab{background:#e9edf2;color:#20242a}.tab.active{background:#1f6feb;color:white}button,input,select{font:inherit}input[type=text],input[type=password],input[type=number],select{padding:9px 11px;border:1px solid #cfd4da;border-radius:8px;background:#fff}button{border:0;border-radius:8px;padding:9px 13px;cursor:pointer;background:#1f6feb;color:#fff}button.secondary{background:#e9edf2;color:#20242a}button.success{background:#157347}button.danger{background:#b42318}button:disabled{opacity:.45;cursor:not-allowed}.status{padding:7px 10px;border-radius:8px;background:#eef4ff;color:#2457a5}.ok{background:#dff4e7;color:#126b36}.bad{background:#fde4e1;color:#9d2016}.muted{color:#6b7280;font-size:13px}.hidden{display:none}.table-wrap{overflow:auto;max-height:65vh;border:1px solid #eceff2;border-radius:10px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #eceff2;vertical-align:top}th{position:sticky;top:0;background:#fafbfc;z-index:2}.track-title{font-weight:700}.location{max-width:360px;word-break:break-all}.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;background:#edf0f3}.accepted{background:#dff4e7;color:#126b36}.rejected{background:#fde4e1;color:#9d2016}.pending{background:#fff2cc;color:#7a5b00}.applied{background:#dceeff;color:#174f8a}.field-grid{display:grid;grid-template-columns:105px minmax(145px,1fr) minmax(145px,1fr) 185px;gap:5px 9px;align-items:center;min-width:630px}.head{font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:700}.field-name{font-weight:650}.choice{display:inline-flex;border:1px solid #d6dae0;border-radius:7px;overflow:hidden}.choice button{border-radius:0;padding:5px 7px;font-size:12px;background:#f7f8fa;color:#32363c}.choice button.active{background:#1f6feb;color:#fff}.choice button:disabled{opacity:.35}.tagbox{margin-top:10px;padding:10px;background:#fafbfc;border:1px solid #e6e9ed;border-radius:9px}.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.tagchip{display:inline-flex;align-items:center;gap:5px;border:1px solid #d7dce2;background:#fff;border-radius:999px;padding:5px 8px;font-size:12px}.tagchip input{margin:0}.main-genre{width:150px}.actions{display:flex;gap:6px;flex-wrap:wrap;min-width:145px}.actions button{padding:7px 9px;font-size:12px}.notice{border-left:4px solid #1f6feb;padding-left:11px}.small{font-size:12px}.source-mode{font-weight:700}
+.source-value{width:100%;min-height:38px;text-align:left;background:#f4f6fa;color:#25334a;border:1px solid #d8deea;white-space:normal}.source-value.active,.typed-value.active{background:#e5f1ff;border:2px solid #3578d4;color:#153b6a}.source-value:disabled{opacity:.45}.typed-value{width:100%;min-width:100px;box-sizing:border-box}.final-value{font-weight:600;background:#eff8f2;color:#205536}input[role=switch]{appearance:none;width:34px;height:20px;border-radius:12px;background:#bbc3ce;position:relative;vertical-align:middle;cursor:pointer}input[role=switch]:before{content:"";position:absolute;width:14px;height:14px;top:3px;left:3px;background:white;border-radius:50%}input[role=switch]:checked{background:#3578d4}input[role=switch]:checked:before{left:17px}input[role=switch]:disabled{opacity:.45}
+
+body{background:#edf1f6;color:#243247}.wrap{max-width:1720px;padding:28px}h1{font-size:26px;letter-spacing:-.6px}.card{border-color:#dce3ec;box-shadow:0 3px 14px #23334d06}.field-grid{gap:3px 7px;align-items:stretch}.field-grid>.head{padding:12px 10px;border-radius:8px 8px 0 0;border-top:3px solid var(--column-accent,#c6ceda);letter-spacing:.6px}.column-current{--column-accent:#7b8799;background:#eef1f5}.column-api{--column-accent:#4886ca;background:#eaf3fd}.column-record{--column-accent:#9871bd;background:#f3edfa}.column-manual{--column-accent:#bd9044;background:#fcf4e5}.column-final{--column-accent:#388665;background:#e7f3eb}.source-cell,.final-value{padding:6px;border-left:1px solid #ffffff;border-right:1px solid #ffffff}.source-value{height:100%;background:transparent;border:1px solid transparent;color:#34445a;padding:8px;line-height:1.4}.source-value:hover:not(:disabled){background:#ffffffb3;border-color:var(--column-accent)}.source-value.active{background:#fff;border:2px solid var(--column-accent);box-shadow:0 1px 4px #26395712;color:#172c48}.typed-value{background:#ffffffb3!important}.typed-value.active{border-color:#bd9044;background:#fff!important}.final-value{display:flex;align-items:center;padding:12px;color:#24573f;font-weight:650;overflow-wrap:anywhere}.field-name{padding:12px 2px;font-size:12px;color:#687589}.tagbox{background:#f8fafc;padding:14px;border-color:#dfe6ef}.table-wrap{border-color:#dce3ec}tbody>tr>td{border-bottom:8px solid #edf1f6;padding-top:16px;padding-bottom:16px}.track-title{line-height:1.5}.head.column-final{color:#24573f}button{transition:background .15s,box-shadow .15s}button:focus-visible,input:focus-visible{outline:3px solid #8ab9ed;outline-offset:2px}dialog{box-shadow:0 24px 80px #172c4833}dialog::backdrop{background:#182b4555;backdrop-filter:blur(3px)}dialog h2{margin-top:0}#settingsButton{font-size:22px;width:44px;height:44px;padding:4px;border:1px solid #d7e0eb;background:white}input::placeholder{color:#798697;opacity:1}
+
+/* Music-library theme */
+:root{color-scheme:dark;--canvas:#101114;--panel:#191b20;--line:#30333b;--text:#eeeef2;--muted:#a4a7b3;--accent:#ed4e86}body{background:var(--canvas);color:var(--text)}.wrap{max-width:1800px;padding:26px 32px}.app-header{padding:0 0 24px;border-bottom:1px solid var(--line);margin-bottom:20px}.brand{display:flex;align-items:center;gap:15px}.brand-disc{display:grid;place-items:center;width:48px;height:48px;background:var(--accent);border-radius:50%;color:#111;font-size:38px}.eyebrow{font-size:9px;letter-spacing:2px;color:var(--muted);font-weight:700}h1{margin:5px 0 0;font-size:24px;font-weight:750;letter-spacing:-.7px}h1 span{font-weight:450;color:#c4c6d0}.card{background:var(--panel);border:1px solid #292c34;border-radius:10px;box-shadow:none;padding:20px;margin:14px 0}.navigation{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:0;margin:0 0 22px}.tabs{gap:22px}.tab,.tab.active{background:transparent;border-radius:0;padding:14px 2px;color:var(--muted);border-bottom:2px solid transparent}.tab.active{border-bottom-color:var(--accent);color:white}.section-label{font-size:11px;font-weight:750;letter-spacing:1.5px;color:#dadce5;margin-bottom:18px}.section-label span{font-size:12px;letter-spacing:0;font-weight:400;color:var(--muted);margin-left:15px}p,.muted,.head,.field-name{color:var(--muted)}button{background:var(--accent);color:#fff;font-weight:600;border-radius:6px}button:hover:not(:disabled){filter:brightness(1.12)}button.secondary{background:#2b2e37;color:#e0e2eb}.success{background:#287957!important}.danger{background:#57303a!important;color:#ffb8c5!important}input[type=text],input[type=password],input[type=number],select{background:#111318;color:#eeeef2;border-color:#3a3d47;border-radius:6px}input::placeholder{color:#777c8d}label{font-size:13px}#lexPanel>.row{margin-bottom:14px}#lexPanel label{display:flex;flex-direction:column;gap:8px}#lexPanel input{max-width:210px}#lexPanel hr{border-color:var(--line)!important}.status{background:#292c36;color:#b8bfd2;font-size:12px}.status.ok,.accepted{background:#213c31;color:#8fd7b1}.status.bad,.rejected{background:#492a33;color:#ffb3c1}.pending{background:#433925;color:#e8ce8c}.applied{background:#253c52;color:#9dcaef}#connectionError{color:#ffb3c1!important}.table-wrap{border-color:var(--line);border-radius:8px}th{background:#22252c;color:#a8adbd;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:13px 9px}td{border-color:var(--line)}tbody>tr>td{border-bottom:7px solid var(--canvas)}.track-title{color:#f2f2f6;min-width:180px}.location{font-size:11px;color:#868d9e}.field-grid{gap:3px 6px}.column-current{--column-accent:#8f96a8;background:#23262d}.column-api{--column-accent:#6eaaf0;background:#1b2c41}.column-record{--column-accent:#b699e7;background:#2e2440}.column-manual{--column-accent:#d3b473;background:#352f23}.column-final{--column-accent:#79cda3;background:#1e372d}.field-grid>.head{color:var(--column-accent);font-size:10px}.source-cell,.final-value{border:0}.source-value{color:#cbd1df;background:transparent;font-weight:450}.source-value.active{color:#fff;background:#ffffff12;border:2px solid var(--column-accent);box-shadow:none}.source-value:hover:not(:disabled){background:#ffffff0d}.source-value:disabled{opacity:.35}.typed-value{background:#16181e!important;color:#eee!important}.typed-value.active{background:#352f23!important}.final-value{color:#b4e7cb}.head.column-final{color:#79cda3}.tagbox{background:#15171c;border-color:#30343e}.tagchip{background:#242730;border-color:#3c4150;color:#d8dce6}.tagrow button{font-size:11px;padding:5px 8px}.tagbox p[style*="color"]{color:#edbc86!important}.tagbox input[role=switch]:checked{background:var(--accent)}input[role=switch]{background:#555a68}input[type=checkbox]{accent-color:var(--accent)}.main-genre{color:#b4e7cb}dialog{background:#1c1f26;color:var(--text);border-color:#3c4150!important;box-shadow:0 25px 100px #0009}dialog::backdrop{background:#08090dbc}dialog p{line-height:1.5}#settingsButton{background:#252831;color:#eee;border-color:#3b3e49}#debugLog{color:#b5c4d9}button:focus-visible,input:focus-visible{outline-color:#f59fbe}.review-card{padding:16px}.actions{min-width:120px}.actions button{font-size:11px}.small{line-height:1.6}@media(max-width:800px){.wrap{padding:16px}.app-header{gap:10px}h1{font-size:18px}.brand-disc{width:36px;height:36px;font-size:28px}.section-label span{display:block;margin:7px 0 0}.card{padding:14px}}
+
+.help-wrap{position:relative;display:inline-flex;margin:8px 8px 0 0;vertical-align:middle;cursor:default}.info-button{width:22px;height:22px;padding:0;border-radius:50%;background:#aab2c4;color:#15171c;font-size:14px;font-weight:800;font-family:Georgia,serif;cursor:pointer;user-select:none}.help-tooltip{display:none;position:absolute;bottom:calc(100% + 9px);left:0;width:min(350px,75vw);padding:14px 16px;background:#303642;color:#f2f3f7;border:1px solid #586173;box-shadow:0 8px 30px #0006;border-radius:9px;font-size:12px;line-height:1.6;z-index:20;cursor:default}.help-wrap:hover .help-tooltip,.help-wrap:focus-within .help-tooltip{display:block}.help-tooltip:after{content:"";position:absolute;bottom:-6px;left:7px;width:10px;height:10px;background:#303642;transform:rotate(45deg);border-right:1px solid #586173;border-bottom:1px solid #586173}#historyDialog table{table-layout:fixed}#historyDialog td,#historyDialog p{overflow-wrap:anywhere}#historyDialog{max-height:85vh;overflow:auto}
+
+:root[data-theme="light"]{color-scheme:light;--canvas:#f1f3f7;--panel:#fff;--line:#d8dde6;--text:#242934;--muted:#626c7e;--accent:#b92560}
+:root[data-theme="light"] h1 span{color:#626c7e}
+:root[data-theme="light"] .card{border-color:#dce1e9;box-shadow:0 2px 8px #27344a05}
+:root[data-theme="light"] .navigation{box-shadow:none}
+:root[data-theme="light"] .tab.active{color:#242934}
+:root[data-theme="light"] .section-label{color:#414b5e}
+:root[data-theme="light"] button.secondary{background:#e7eaf0;color:#374256}
+:root[data-theme="light"] input[type=text],:root[data-theme="light"] input[type=password],:root[data-theme="light"] input[type=number],:root[data-theme="light"] select{background:#f9fafc;color:#222c3b;border-color:#cbd2de}
+:root[data-theme="light"] input::placeholder{color:#7b8493}
+:root[data-theme="light"] th{background:#eef1f6;color:#5b6678}
+:root[data-theme="light"] .track-title{color:#232e40}
+:root[data-theme="light"] .location{color:#69778a}
+:root[data-theme="light"] .column-current{--column-accent:#6b778d;background:#eef0f4}
+:root[data-theme="light"] .column-api{--column-accent:#3974b9;background:#e8f1fd}
+:root[data-theme="light"] .column-record{--column-accent:#865cb0;background:#f0eafa}
+:root[data-theme="light"] .column-manual{--column-accent:#946c23;background:#faf1df}
+:root[data-theme="light"] .column-final{--column-accent:#2a7a55;background:#e4f2e9}
+:root[data-theme="light"] .source-value{color:#3a465b}
+:root[data-theme="light"] .source-value.active{color:#19283c;background:#fff}
+:root[data-theme="light"] .source-value:hover:not(:disabled){background:#ffffffa8}
+:root[data-theme="light"] .typed-value,:root[data-theme="light"] .typed-value.active{background:#fff!important;color:#293245!important}
+:root[data-theme="light"] .final-value,:root[data-theme="light"] .head.column-final{color:#246440}
+:root[data-theme="light"] .tagbox{background:#f6f8fb;border-color:#d6deea}
+:root[data-theme="light"] .tagchip{background:#fff;border-color:#cdd5e2;color:#3e4c62}
+:root[data-theme="light"] .tagbox p[style*="color"]{color:#80521f!important}
+:root[data-theme="light"] .status{background:#e6ebf5;color:#526380}
+:root[data-theme="light"] .status.ok,:root[data-theme="light"] .accepted{background:#def0e5;color:#266340}
+:root[data-theme="light"] .status.bad,:root[data-theme="light"] .rejected{background:#fbe5e9;color:#a22f49}
+:root[data-theme="light"] .pending{background:#fff0d1;color:#836220}
+:root[data-theme="light"] .applied{background:#deecfa;color:#315f90}
+:root[data-theme="light"] #connectionError{color:#a22f49!important}
+:root[data-theme="light"] .danger{background:#fae1e7!important;color:#9f2544!important}
+:root[data-theme="light"] #settingsButton{background:white;color:#374256;border-color:#d5dce7}
+:root[data-theme="light"] dialog{background:#fff;border-color:#cbd3df!important}
+:root[data-theme="light"] dialog::backdrop{background:#24314955}
+:root[data-theme="light"] .help-tooltip{background:#fff;color:#344057;border-color:#c8d1df;box-shadow:0 8px 25px #27334b25}
+:root[data-theme="light"] .help-tooltip:after{background:#fff;border-color:#c8d1df}
+:root[data-theme="light"] .info-button{background:#66758d;color:white}
+:root[data-theme="light"] #debugLog{color:#445b76}
+.version-notice{display:inline-flex;align-items:center;gap:6px;margin-top:8px}.version-notice .help-wrap{margin:0}
+
+@media(prefers-color-scheme:light){
+:root:not([data-theme]){color-scheme:light;--canvas:#f1f3f7;--panel:#fff;--line:#d8dde6;--text:#242934;--muted:#626c7e;--accent:#b92560}
+:root:not([data-theme]) h1 span{color:#626c7e}
+:root:not([data-theme]) .card{border-color:#dce1e9;box-shadow:0 2px 8px #27344a05}
+:root:not([data-theme]) .navigation{box-shadow:none}
+:root:not([data-theme]) .tab.active{color:#242934}
+:root:not([data-theme]) .section-label{color:#414b5e}
+:root:not([data-theme]) button.secondary{background:#e7eaf0;color:#374256}
+:root:not([data-theme]) input[type=text],:root:not([data-theme]) input[type=password],:root:not([data-theme]) input[type=number],:root:not([data-theme]) select{background:#f9fafc;color:#222c3b;border-color:#cbd2de}
+:root:not([data-theme]) input::placeholder{color:#7b8493}
+:root:not([data-theme]) th{background:#eef1f6;color:#5b6678}
+:root:not([data-theme]) .track-title{color:#232e40}
+:root:not([data-theme]) .location{color:#69778a}
+:root:not([data-theme]) .column-current{--column-accent:#6b778d;background:#eef0f4}
+:root:not([data-theme]) .column-api{--column-accent:#3974b9;background:#e8f1fd}
+:root:not([data-theme]) .column-record{--column-accent:#865cb0;background:#f0eafa}
+:root:not([data-theme]) .column-manual{--column-accent:#946c23;background:#faf1df}
+:root:not([data-theme]) .column-final{--column-accent:#2a7a55;background:#e4f2e9}
+:root:not([data-theme]) .source-value{color:#3a465b}
+:root:not([data-theme]) .source-value.active{color:#19283c;background:#fff}
+:root:not([data-theme]) .source-value:hover:not(:disabled){background:#ffffffa8}
+:root:not([data-theme]) .typed-value,:root:not([data-theme]) .typed-value.active{background:#fff!important;color:#293245!important}
+:root:not([data-theme]) .final-value,:root:not([data-theme]) .head.column-final{color:#246440}
+:root:not([data-theme]) .tagbox{background:#f6f8fb;border-color:#d6deea}
+:root:not([data-theme]) .tagchip{background:#fff;border-color:#cdd5e2;color:#3e4c62}
+:root:not([data-theme]) .tagbox p[style*="color"]{color:#80521f!important}
+:root:not([data-theme]) .status{background:#e6ebf5;color:#526380}
+:root:not([data-theme]) .status.ok,:root:not([data-theme]) .accepted{background:#def0e5;color:#266340}
+:root:not([data-theme]) .status.bad,:root:not([data-theme]) .rejected{background:#fbe5e9;color:#a22f49}
+:root:not([data-theme]) .pending{background:#fff0d1;color:#836220}
+:root:not([data-theme]) .applied{background:#deecfa;color:#315f90}
+:root:not([data-theme]) #connectionError{color:#a22f49!important}
+:root:not([data-theme]) .danger{background:#fae1e7!important;color:#9f2544!important}
+:root:not([data-theme]) #settingsButton{background:white;color:#374256;border-color:#d5dce7}
+:root:not([data-theme]) dialog{background:#fff;border-color:#cbd3df!important}
+:root:not([data-theme]) dialog::backdrop{background:#24314955}
+:root:not([data-theme]) .help-tooltip{background:#fff;color:#344057;border-color:#c8d1df;box-shadow:0 8px 25px #27334b25}
+:root:not([data-theme]) .help-tooltip:after{background:#fff;border-color:#c8d1df}
+:root:not([data-theme]) .info-button{background:#66758d;color:white}
+:root:not([data-theme]) #debugLog{color:#445b76}
+.version-notice{display:inline-flex;align-items:center;gap:6px;margin-top:8px}.version-notice .help-wrap{margin:0}
+}
+
+.settings-key-label{display:flex;flex-direction:column;gap:10px;line-height:1.5;padding-bottom:3px}.action-with-help{display:inline-flex;align-items:center;gap:7px;flex-shrink:0}.action-with-help>.help-wrap{margin:0}.action-with-help .help-tooltip{left:auto;right:0}.action-with-help .help-tooltip:after{left:auto;right:6px}
+.brand-disc{background:transparent;border-radius:0;flex-shrink:0}.brand-disc svg{display:block;width:100%;height:100%}
+</style></head><body><div class="wrap">
+<header class="row app-header" style="justify-content:space-between"><div class="brand"><span class="brand-disc" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <circle cx="28" cy="28" r="26" fill="#E74759"/>
+  <circle cx="26" cy="27" r="6" fill="#FFFFFF"/>
+  <g transform="rotate(40 47 28)" stroke="#15171C" stroke-width="3" stroke-linejoin="round">
+    <path d="M43 30h8v25a4 4 0 0 1-8 0Z" fill="#FFFFFF"/>
+    <rect x="34" y="20" width="26" height="13" rx="2" fill="#FFFFFF"/>
+  </g>
+</svg></span><div><span class="eyebrow">YOUR MUSIC. YOUR METADATA.</span><h1>Lexicon <span>Metadata Reviewer</span></h1></div></div><button class="secondary" onclick="openHistory()">Change history</button><button id="settingsButton" class="secondary" aria-label="Settings" title="Settings" onclick="openSettings()">⚙</button></header>
+<div class="card navigation"><div class="tabs"><button id="lexTab" class="tab active">Lexicon library</button><button id="csvTab" class="tab">Import CSV</button></div></div>
+
+<div id="lexPanel" class="card"><div class="section-label">FIND YOUR TRACKS</div>
+ <div class="row"><span id="connStatus" class="status" role="status">Connecting to Lexicon…</span><button id="retryConnection" class="secondary hidden" onclick="connectLexicon()">Retry connection</button></div><p id="connectionError" class="hidden" role="alert" style="color:#9d2016"></p>
+ <hr style="border:0;border-top:1px solid #eee;margin:15px 0">
+ <div class="row"><label>Artist <input id="lexArtist" type="text" placeholder="Beyoncé"></label><label>Title <input id="lexTitle" type="text" placeholder="Crazy in Love"></label><label>Genre <input id="lexGenre" type="text" placeholder="Reggae"></label><label>Album <input id="lexAlbum" type="text" placeholder="Album title"></label><label>Custom tag <input id="lexTag" type="text" list="tagSuggestions" placeholder="Start typing a tag name"></label><datalist id="tagSuggestions"></datalist><button id="lexSearch" disabled>Search Lexicon</button><button id="loadTracks" class="secondary" disabled>Load first 100 tracks</button></div>
+ <div class="row"><button id="prevPage" class="secondary" disabled>Previous</button><button id="nextPage" class="secondary" disabled>Next</button><span id="pageInfo" class="muted"></span></div><span class="help-wrap"><button type="button" class="info-button" aria-label="Search help" aria-describedby="help-search">i</button><span class="help-tooltip" role="tooltip" id="help-search">Filled fields are combined (AND). Artist, title, genre and album match partial text, ignoring case. Choose a custom tag from the suggestions; a unique partial tag name also works. Typo-tolerant fuzzy search is not provided.</span></span><p id="searchNotice" class="muted" role="status"></p>
+</div>
+
+<div id="csvPanel" class="card hidden"><div class="row"><input id="csvFile" type="file" accept=".csv,text/csv"><button id="loadDemo" class="secondary">Load demo</button></div><p class="muted">CSV remains available as a fallback. Include Artist + Title; Location is preserved.</p></div>
+
+<div class="card">
+<div class="row">
+ <label>Metadata source <select id="metadataSource"><option value="audiodb">TheAudioDB only</option><option value="sonovault">Sonovault only</option><option value="audiodb-sonovault" selected>TheAudioDB → Sonovault fallback</option><option value="sonovault-audiodb">Sonovault → TheAudioDB fallback</option></select></label>
+<label><input id="advancedMode" type="checkbox"> Advanced mode</label><span id="configStatus" class="muted">Checking local configuration…</span>
+ <span class="action-with-help"><button id="searchBtn" aria-describedby="help-lookup" disabled>Lookup metadata</button><span class="help-wrap"><button type="button" class="info-button" aria-label="Lookup help" aria-describedby="help-lookup">i</button><span class="help-tooltip" role="tooltip" id="help-lookup">Fallback tries the second source when the first is unavailable, incomplete, or weak. One provider result is used at a time to avoid mixing different recordings or releases. Provider keys are read from .env. Source records and search results are cached locally across restarts.</span></span></span><button id="acceptAll" class="success" disabled>Accept matches without warnings</button><button id="rejectAll" class="danger" disabled>Reject all</button><span class="action-with-help"><button id="applyBtn" class="success" aria-describedby="help-apply" disabled>Apply accepted on this page</button><span class="help-wrap"><button type="button" class="info-button" aria-label="Apply help" aria-describedby="help-apply">i</button><span class="help-tooltip" role="tooltip" id="help-apply">Applies accepted tracks on this page to Lexicon after confirmation. The selected genre is always included in custom tags. Add mode keeps existing tags; Overwrite keeps only the selected tags and any enabled Mix tags. Original values are saved to Change history before each track update.</span></span></span><button id="exportBtn" class="secondary" disabled>Export reviewed page CSV</button><span id="status" class="status">No tracks loaded</span>
+</div>
+
+</div>
+
+<div class="card review-card"><div class="section-label">METADATA REVIEW <span>Pick a value in each column to build your final output</span></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Track</th><th>Review</th><th>Decision</th><th>Actions</th></tr></thead><tbody id="tbody"></tbody></table></div></div>
+<details id="debugPanel" class="card hidden"><summary>Debug log</summary><pre id="debugLog" style="max-height:220px;overflow:auto;white-space:pre-wrap"></pre></details></div>
+<dialog id="historyDialog" aria-labelledby="historyTitle" style="width:min(850px,94vw);border-radius:12px;padding:24px"><div class="row" style="justify-content:space-between"><h2 id="historyTitle">Change history</h2><button class="secondary" onclick="document.querySelector('#historyDialog').close()">Close</button></div><p>Last three changes per song. Restore the newest change first. Metadata and custom tags are restored; audio files are not renamed.</p><div id="historyEntries"></div><p id="historyMessage" role="status"></p></dialog>
+<dialog id="settingsDialog" aria-labelledby="settingsTitle" style="border:1px solid #d8deea;border-radius:16px;padding:24px;width:min(480px,90vw)"><form onsubmit="event.preventDefault();saveSettings()"><h2 id="settingsTitle">Settings</h2><div style="display:grid;gap:16px"><label class="settings-key-label">SonoVault API key<input id="settingsSono" type="password" autocomplete="new-password" placeholder="Leave blank to keep saved key" style="display:block;width:100%"></label><label class="settings-key-label">TheAudioDB API key<input id="settingsAudio" type="password" autocomplete="new-password" placeholder="Leave blank to keep saved key" style="display:block;width:100%"></label><label><input id="settingsAdvanced" type="checkbox" role="switch"> Advanced mode</label><label><input id="settingsOverwrite" type="checkbox" role="switch"> Overwrite custom tags by default</label><label><input id="settingsMix" type="checkbox" role="switch"> Include Mix tags from title by default</label><label>Appearance <select id="settingsTheme" style="display:block;width:100%;margin-top:8px"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label><label><input id="settingsDebug" type="checkbox" role="switch"> Show debug log</label></div><p class="muted">Leave key fields untouched to keep saved keys; enter a value to replace one.</p><p class="muted">Tag defaults apply to newly loaded songs. Advanced mode applies immediately. Environment API keys override saved keys.</p><div style="border-top:1px solid #d8deea;padding-top:14px"><button id="clearCacheButton" type="button" class="secondary" onclick="clearMetadataCache()">Clear metadata cache</button><p class="muted">Removes saved provider records and search results. Current reviews and settings are kept. Future lookups fetch fresh data.</p></div><p id="settingsMessage" role="status"></p><div class="row" style="justify-content:flex-end"><button type="button" class="secondary" onclick="document.querySelector('#settingsDialog').close()">Cancel</button><button id="settingsSave" type="submit">Save settings</button></div></form></dialog>
+<script>
+const $=s=>document.querySelector(s);
+const tbody=$('#tbody'),status=$('#status'),searchBtn=$('#searchBtn'),acceptAll=$('#acceptAll'),rejectAll=$('#rejectAll'),exportBtn=$('#exportBtn'),applyBtn=$('#applyBtn'),connStatus=$('#connStatus'),lexSearch=$('#lexSearch'),loadTracks=$('#loadTracks'),lexArtist=$('#lexArtist'),lexTitle=$('#lexTitle'),lexGenre=$('#lexGenre'),lexAlbum=$('#lexAlbum'),lexTag=$('#lexTag'),tagSuggestions=$('#tagSuggestions'),searchNotice=$('#searchNotice'),advancedMode=$('#advancedMode'),configStatus=$('#configStatus'),metadataSource=$('#metadataSource'),lexPanel=$('#lexPanel'),csvPanel=$('#csvPanel'),lexTab=$('#lexTab'),csvTab=$('#csvTab'),csvFile=$('#csvFile'),loadDemo=$('#loadDemo'),prevPage=$('#prevPage'),nextPage=$('#nextPage'),pageInfo=$('#pageInfo');
+const sourceRecords=new Map();let advanced=false;let tagDefaults={tagMode:'add',includeMix:true};
+let loadError='',busy=false,pageOffset=0,pageTotal=0,pageKind='library',searchTracks=[],reviewCache=new Map();const PAGE_SIZE=100;
+
+const debugLog=$('#debugLog');
+function dbg(...args){const line=args.map(x=>typeof x==='string'?x:JSON.stringify(x,null,2)).join(' ');console.info('[DBG]',...args);if(debugLog){debugLog.textContent+=(debugLog.textContent?'\n':'')+line;debugLog.scrollTop=debugLog.scrollHeight}} const FIELDS=['Title','Artist','AlbumTitle','Genre','Year','TrackNumber','Label']; let rows=[],sourceMode='lexicon',connected=false,allTags=[],tagCategories=[];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+function val(o,...names){for(const n of names){if(o?.[n]!=null)return o[n];const k=Object.keys(o||{}).find(x=>x.toLowerCase()===n.toLowerCase());if(k)return o[k]}return''}
+function normalize(s){return String(s??'').toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/\b(?:feat|ft)\b\.?/g,' ').replace(/[^\p{L}\p{N}]+/gu,' ').trim()}
+function similarity(a,b){a=normalize(a);b=normalize(b);if(!a||!b)return 0;if(a===b)return 1;const A=new Set(a.split(' ')),B=new Set(b.split(' '));let n=0;A.forEach(x=>B.has(x)&&n++);return n/Math.max(A.size,B.size)}
+function payload(d){while(d&&typeof d==='object'&&!Array.isArray(d)&&d.data!=null)d=d.data;return d}
+function unwrapList(data,keys=['tracks','results','items']){const d=payload(data);if(Array.isArray(d))return d;for(const k of keys)if(Array.isArray(d?.[k]))return d[k];throw new Error('Unexpected response: no '+keys.join('/')+' list')}
+function versionProtected(item){return /\b(clean|dirty|explicit|radio[ -]?edit|extended|main|edit|mix|dub|intro|outro|quick[ -]?hit|acapella|a[ -]?cappella|instrumental|remix|bootleg|mashup|re[ -]?drum|transition)\b/i.test([val(item.original,'Title'),val(item.original,'Location'),item.lexiconTrack?.mix,item.lexiconTrack?.remixer].filter(Boolean).join(' '))}
+function canUse(item,f,choice='api'){if(f==='Title'&&versionProtected(item))return false;if(choice==='manual')return Object.hasOwn(item.manual||{},f)&&!manualError(item,f);return !!proposed(choice==='record'?item.reference:item.result,f)}
+function manualError(item,f){const v=item.manual?.[f];if(['Year','TrackNumber'].includes(f)&&(!/^\d+$/.test(String(v??''))||!Number.isSafeInteger(Number(v))))return 'Enter a whole number of 0 or greater.';return ''}
+function invalidManual(item){return FIELDS.some(f=>item.fields[f]==='manual'&&!canUse(item,f,'manual'))}
+function hasProposal(item){return !!(item.result||item.reference||Object.keys(item.manual||{}).length||item.tagMode==='replace'||selectedTags(item).length)}
+function chosenValue(item,f){const choice=item.fields[f]||'current';if(choice==='current')return val(item.original,f);if(choice==='manual')return item.manual?.[f]??'';return canUse(item,f,choice)?proposed(choice==='record'?item.reference:item.result,f):val(item.original,f)}
+function invalidate(item){if(!item.applied)item.decision='pending'}
+function bulkEligible(item){return !!item.result&&item.tagMode!=='replace'&&!Object.values(item.fields).includes('manual')&&!item.reference&&!item.error&&!item.applied&&(item.result._score||0)>=.55}
+function setBusy(value){busy=value;controls()}
+function rememberRows(){for(const r of rows)if(r.lexiconId!=null)reviewCache.set(String(r.lexiconId),r)}
+
+async function api(path,opts={}){
+ console.info('[Lexicon API] request', opts.method||'GET', path, opts.body||'');
+ const started=performance.now();
+ let r;
+ try{r=await fetch('/lexicon'+path,{headers:{'Content-Type':'application/json',...(opts.headers||{})},...opts})}
+ catch(err){console.error('[Lexicon API] fetch failed',path,err);throw err}
+ const txt=await r.text();
+ console.info('[Lexicon API] response',r.status,path,Math.round(performance.now()-started)+'ms',txt.slice(0,1000));
+ let d=null;try{d=txt?JSON.parse(txt):null}catch{d=txt}
+ if(!r.ok){const e=new Error(typeof d==='string'?d:(d?.error||d?.message||`HTTP ${r.status}`));e.status=r.status;e.data=d;console.error('[Lexicon API] error',e);throw e}
+ return d
+}
+function trackToOriginal(t){return {Location:val(t,'location','filePath','path'),Title:val(t,'title'),Artist:val(t,'artist'),AlbumTitle:val(t,'albumTitle','album'),Genre:val(t,'genre'),Year:val(t,'year'),TrackNumber:val(t,'trackNumber'),Label:val(t,'label')}}
+function trackId(t){return val(t,'id','trackId')}
+function makeRows(tracks){rememberRows();rows=tracks.map((t,i)=>{const cached=reviewCache.get(String(trackId(t)));return cached?{...cached,id:i+1}:{id:i+1,lexiconTrack:t,lexiconId:trackId(t),original:trackToOriginal(t),...tagDefaults,result:null,decision:'pending',error:null,fields:{},mainGenre:'',genreTags:[],applied:false}});render();controls()}
+function proposed(r,f){if(!r)return'';return({Title:r.strTrack,Artist:r.strArtist,AlbumTitle:r.strAlbum,Genre:r.strGenre,Year:r.intYearReleased||r.intYear,TrackNumber:r.intTrackNumber,Label:r.strLabel})[f]??''}
+function fieldSource(r,f){return r?._sources?.[f]||r?._source||''}
+const GENRE_ALIASES={'hip hop':'Hip-Hop','hip-hop':'Hip-Hop','hiphop':'Hip-Hop','r&b':'R&B','rnb':'R&B','rhythm and blues':'R&B','rap':'Rap','pop':'Pop','soul':'Soul','funk':'Funk','reggae':'Reggae','dancehall':'Dancehall','rock':'Rock','house':'House','disco':'Disco','electronic':'Electronic','dance':'Dance','country':'Country','jazz':'Jazz','latin':'Latin','afrobeat':'Afrobeat','afrobeats':'Afrobeats'};
+function canonicalGenre(s){const raw=(s||'').trim();const key=raw.toLowerCase().replace(/_/g,' ').replace(/\s+/g,' ');return GENRE_ALIASES[key]||raw.replace(/\b\w/g,m=>m.toUpperCase()).replace(/R&B/gi,'R&B')}
+function splitGenres(s){if(!s)return[];let x=s.replace(/R\s*&\s*B/gi,'R_AND_B').replace(/Hip\s*-?\s*Hop/gi,'HIP_HOP');let parts=x.split(/\s*[,;/|+]\s*|\s+&\s+/).flatMap(p=>p.split(/\s*\/\s*/));return [...new Set(parts.map(p=>p.replace(/R_AND_B/g,'R&B').replace(/HIP_HOP/g,'Hip-Hop').trim()).filter(Boolean).map(canonicalGenre))]}
+function initChoices(item){item.tagMode??=tagDefaults.tagMode;item.fields={};FIELDS.forEach(f=>item.fields[f]=canUse(item,f)?'api':'current');item.genreTags=splitGenres(proposed(item.result,'Genre'));item.mainGenre=item.genreTags[0]||canonicalGenre(proposed(item.result,'Genre'))||val(item.original,'Genre')}
+function tagHTML(item){const chips=item.genreTags.map((t,i)=>`<label class="tagchip"><input type="checkbox" ${typeof t==='string'||t.enabled!==false?'checked':''} onchange="toggleGenreTag(${item.id},${i},this.checked)">${esc(typeof t==='string'?t:t.label)}</label>`).join('');return `<div class="tagbox"><div><b>Main Genre:</b> <span id="main-genre-${item.id}">${esc(finalValue(item,'Genre')||'—')}</span> <span class="muted">Always included in custom tags</span></div><div class="row" style="margin-top:8px"><label title="Off adds checked tags to existing tags. On replaces the complete custom tag list."><input type="checkbox" role="switch" aria-label="Overwrite custom tags for track ${item.id}" ${item.tagMode==='replace'?'checked':''} onchange="setTagMode(${item.id},this.checked?'replace':'add')"> Overwrite custom tags</label><label title="When overwriting, also include version markers found in this song's original title."><input type="checkbox" role="switch" aria-label="Include Mix tags from title for track ${item.id}" ${item.includeMix!==false?'checked':''} ${item.tagMode!=='replace'?'disabled':''} onchange="setIncludeMix(${item.id},this.checked)"> Include Mix tags from title</label></div><div class="small muted" style="margin-top:8px">Mix tags detected: ${detectedMixTags(item).map(esc).join(', ')||'None'}</div>${item.tagMode==='replace'?`<p id="tag-preview-${item.id}" style="color:#b42318">${effectiveTags(item).length?'Only these custom tags will remain: '+effectiveTags(item).map(esc).join(', '):'No tags selected: all custom tags will be cleared.'}</p>`:''}<div class="tagrow"><b class="small">Custom Genre Tags:</b><button class="secondary" onclick="allGenreTags(${item.id},true)">Select all</button><button class="secondary" onclick="allGenreTags(${item.id},false)">Clear all</button>${chips||'<span class="muted">No genre tags parsed</span>'}</div><div class="row" style="margin-top:7px"><input id="extra-${item.id}" type="text" placeholder="Add tag, e.g. Rap"><button class="secondary" onclick="addGenreTag(${item.id})">Add tag</button></div></div>`}
+function finalValue(item,f){return f==='Genre'&&['api','record'].includes(item.fields[f])?item.mainGenre:chosenValue(item,f)}
+function syncMainGenre(item){const value=chosenValue(item,'Genre');item.mainGenre=['api','record'].includes(item.fields.Genre)?splitGenres(value)[0]||value||'':value||''}
+function reviewHTML(item){
+ const picker=recordHTML(item),showRecord=advanced&&!!item.reference;
+ if(!hasProposal(item)&&!advanced)return picker+tagHTML(item)+(item.error?`<p style="color:#b42318">${esc(item.error)}</p>`:'<p class="muted">Not looked up yet</p>');
+ const columns=4+(showRecord?1:0)+(advanced?1:0);
+ let h=`<div class="field-grid" style="grid-template-columns:90px repeat(${columns-1},minmax(140px,1fr));min-width:${columns*145}px"><div class="head">Field</div><div class="head column-current">Current</div><div class="head column-api">API match</div>${showRecord?'<div class="head column-record">Selected record</div>':''}${advanced?'<div class="head column-manual">Type a value</div>':''}<div class="head column-final">Final output</div>`;
+ for(const f of FIELDS){const ch=item.fields[f]||'current',c=val(item.original,f);h+=`<div class="field-name">${esc(f)}</div>`;
+ for(const [choice,label,value] of [['current','Current',c],['api','API',proposed(item.result,f)],...(showRecord?[['record','Record',proposed(item.reference,f)]]:[])])h+=`<div class="source-cell column-${choice}"><button data-field="${f}" data-choice="${choice}" aria-label="Use ${label} for ${f} on track ${item.id}" aria-pressed="${ch===choice}" class="source-value ${ch===choice?'active':''}" onclick="fieldChoice(${item.id},'${f}','${choice}')" ${choice!=='current'&&!canUse(item,f,choice)?'disabled':''}>${esc(value||'—')}</button></div>`;
+ if(advanced)h+=`<div class="source-cell column-manual"><input type="text" class="typed-value ${ch==='manual'?'active':''}" id="typed-${item.id}-${f}" aria-label="Typed ${f} for track ${item.id}" placeholder="Type a value" value="${esc(item.manual?.[f]??'')}" ${f==='Title'&&versionProtected(item)?'disabled':''} onfocus="if(Object.hasOwn(rows.find(x=>x.id===${item.id}).manual||{},'${f}'))setManual(${item.id},'${f}',this.value)" oninput="setManual(${item.id},'${f}',this.value)"><span id="manual-error-${item.id}-${f}" class="muted" style="color:#b42318">${Object.hasOwn(item.manual||{},f)?esc(manualError(item,f)):''}</span></div>`;
+ h+=`<div class="final-value column-final" id="final-${item.id}-${f}">${esc(finalValue(item,f)||'—')}</div>`;
+ }
+ return picker+h+'</div>'+(item.result?`<p class="muted">API text match score: ${Math.round((item.result._score||0)*100)}/100 — artist/title similarity, not verified identification.</p>`:'')+(versionProtected(item)?`<span class="version-notice muted">Version title protected <span class="help-wrap"><button type="button" class="info-button" aria-label="Why this title is protected" aria-describedby="version-help-${item.id}">i</button><span id="version-help-${item.id}" class="help-tooltip" role="tooltip">A version word such as Clean, Extended, Remix, or Instrumental was found in this track’s title, file path, mix, or remixer. The original title is kept so a generic metadata title cannot remove that detail. Title selection and typing are disabled; other fields can still be edited. This is a text check, not audio identification.</span></span></span>`:'')+tagHTML(item)+(item.error?`<p class="muted">Original API lookup: ${esc(item.error)}</p>`:'');
+}
+function render(){tbody.innerHTML=rows.map(item=>{const a=val(item.original,'Artist'),t=val(item.original,'Title'),l=val(item.original,'Location'),cls=item.applied?'applied':item.decision==='accepted'?'accepted':item.decision==='rejected'?'rejected':'pending';const label=item.applied?'applied':item.decision;return `<tr data-row-id="${item.id}"><td>${item.id}</td><td><div class="track-title">${esc(a)} – ${esc(t)}</div>${l?`<div class="muted location">${esc(l)}</div>`:''}${item.lexiconId?`<div class="muted">Lexicon ID: ${esc(item.lexiconId)}</div>`:''}</td><td>${reviewHTML(item)}</td><td><span class="pill ${cls}">${label}</span></td><td><div class="actions"><button class="success" onclick="decide(${item.id},'accepted')" ${!hasProposal(item)||invalidManual(item)||item.applied?'disabled':''}>Accept</button><button class="danger" onclick="decide(${item.id},'rejected')">Reject</button>${hasProposal(item)?`<button class="secondary" onclick="allFields(${item.id},'api')" ${!item.result?'disabled':''}>All API</button><button class="secondary" onclick="allFields(${item.id},'current')">All current</button>`:''}</div></td></tr>`}).join('');const m=rows.filter(r=>r.result).length,refs=rows.filter(r=>r.reference).length,a=rows.filter(r=>r.decision==='accepted').length,ap=rows.filter(r=>r.applied).length;status.textContent=rows.length?`${rows.length} tracks · ${m} API matched${refs?` · ${refs} with selected records`:''} · ${a} accepted${ap?` · ${ap} applied`:''}`:'No tracks loaded'}
+function controls(){$('#retryConnection').classList.toggle('hidden',connected||busy);$('#retryConnection').disabled=busy;searchBtn.disabled=busy||!rows.some(r=>!r.applied);acceptAll.disabled=busy||!rows.some(bulkEligible);rejectAll.disabled=busy||!rows.length;exportBtn.disabled=busy||!rows.some(r=>r.decision==='accepted'&&hasProposal(r)&&!invalidManual(r));applyBtn.disabled=busy||sourceMode!=='lexicon'||!connected||!rows.some(r=>r.decision==='accepted'&&hasProposal(r)&&!invalidManual(r)&&!r.applied);lexSearch.disabled=loadTracks.disabled=busy||!connected;prevPage.disabled=busy||sourceMode!=='lexicon'||pageOffset===0;nextPage.disabled=busy||sourceMode!=='lexicon'||pageOffset+PAGE_SIZE>=pageTotal;for(const e of [lexTab,csvTab,csvFile,loadDemo,metadataSource,advancedMode,$('#settingsButton')])e.disabled=busy;pageInfo.textContent=sourceMode==='lexicon'&&pageTotal?`${pageOffset+1}–${Math.min(pageOffset+rows.length,pageTotal)} of ${pageTotal} tracks`:'';document.querySelectorAll('#tbody tr').forEach(tr=>{const item=rows.find(r=>r.id===Number(tr.dataset.rowId));if(busy||item?.applied)tr.querySelectorAll('button,input,select').forEach(e=>e.disabled=true)})}
+
+function editable(id){return !busy&&rows.find(r=>r.id===id&&!r.applied)}
+window.setAdvanced=on=>{
+ if(busy)return;advanced=!!on;advancedMode.checked=advanced;
+ if(!advanced){const all=new Set([...rows,...reviewCache.values()]);for(const item of all){if(item.applied)continue;let changed=false;for(const f of FIELDS)if(['record','manual'].includes(item.fields[f])){item.fields[f]='current';changed=true}if(changed){syncMainGenre(item);invalidate(item)}}}
+ render();controls();
+};
+window.setManual=(id,f,value)=>{
+ const item=editable(id);if(!advanced||!item||!FIELDS.includes(f)||(f==='Title'&&versionProtected(item)))return;
+ item.manual??={};item.manual[f]=value;item.fields[f]='manual';if(f==='Genre')syncMainGenre(item);invalidate(item);
+ const output=$(`#final-${id}-${f}`);if(output)output.textContent=value||'—';
+ const input=$(`#typed-${id}-${f}`);if(input)input.classList.toggle('active',true);
+ document.querySelectorAll(`tr[data-row-id="${id}"] button[data-field="${f}"]`).forEach(button=>{button.classList.toggle('active',false);button.setAttribute('aria-pressed','false')});
+ if(f==='Genre'){const genre=$(`#main-genre-${id}`);if(genre)genre.textContent=finalValue(item,'Genre')||'—';const preview=$(`#tag-preview-${id}`);if(preview)preview.textContent=effectiveTags(item).length?'Only these custom tags will remain: '+effectiveTags(item).join(', '):'No tags selected: all custom tags will be cleared.'}
+ const error=$(`#manual-error-${id}-${f}`);if(error)error.textContent=manualError(item,f);
+ const button=document.querySelector(`[aria-label="Use Typed for ${f} on track ${id}"]`);if(button)button.disabled=!canUse(item,f,'manual');
+ const row=document.querySelector(`tr[data-row-id="${id}"]`);if(row){const decision=row.querySelector('.pill');if(decision){decision.textContent='pending';decision.className='pill pending'}const accept=row.querySelector('.actions .success');if(accept)accept.disabled=!hasProposal(item)||invalidManual(item)}
+ status.textContent=`${rows.length} tracks · ${rows.filter(r=>r.decision==='accepted').length} accepted`;controls();
+};
+window.setTagMode=(id,mode)=>{const item=editable(id);if(!item||!['add','replace'].includes(mode))return;item.tagMode=mode;invalidate(item);render();controls()};
+window.allGenreTags=(id,on)=>{const item=editable(id);if(!item)return;item.genreTags=item.genreTags.map(t=>({label:typeof t==='string'?t:t.label,enabled:!!on}));invalidate(item);render();controls()};
+window.decide=(id,d)=>{const x=editable(id);if(x&&(d!=='accepted'||(hasProposal(x)&&!invalidManual(x)))){x.decision=d;render();controls()}};
+window.fieldChoice=(id,f,c)=>{const x=editable(id);if(x&&(!['record','manual'].includes(c)||advanced)&&['current','api','record','manual'].includes(c)&&(c==='current'||canUse(x,f,c))){x.fields[f]=c;if(f==='Genre')syncMainGenre(x);invalidate(x);render();controls()}};
+window.allFields=(id,c)=>{const x=editable(id);if(!x)return;FIELDS.forEach(f=>x.fields[f]=c==='api'&&canUse(x,f)?'api':'current');syncMainGenre(x);if(c==='current')x.tagMode='add';if(c==='current')x.genreTags=x.genreTags.map(t=>({label:typeof t==='string'?t:t.label,enabled:false}));invalidate(x);render();controls()};
+
+window.toggleGenreTag=(id,i,on)=>{const x=editable(id);if(!x)return;x.genreTags[i]={label:typeof x.genreTags[i]==='string'?x.genreTags[i]:x.genreTags[i].label,enabled:on};invalidate(x);render();controls()};
+window.addGenreTag=id=>{const x=editable(id),inp=$(`#extra-${id}`);if(!x||!inp)return;const tag=canonicalGenre(inp.value);if(tag){x.genreTags.push(tag);invalidate(x);render();controls()}};
+
+function detectedMixTags(item){
+ const title=val(item.original,'Title');
+ const patterns=[['Clean',/\bclean\b/i],['Dirty',/\bdirty\b/i],['Explicit',/\bexplicit\b/i],['Extended',/\bextended\b/i],['Intro',/\bintro\b/i],['Outro',/\boutro\b/i],['Instrumental',/\binstrumental\b/i],['Acapella-In',/\b(?:a[ -]?ca?pp?ella)[ -]in\b/i],['Acapella-Out',/\b(?:a[ -]?ca?pp?ella)[ -]out\b/i],['Acapella',/\b(?:a[ -]?ca?pp?ella)\b(?![ -](?:in|out)\b)/i],['Radio',/\bradio(?:[ -]edit)?\b/i],['Remix',/\bremix\b/i],['Club',/\bclub[ -](?:mix|edit|version)\b/i],['Short Edit',/\bshort[ -]edit\b/i],['Transition',/\btransition\b/i],['Loop',/\bloop\b/i]];
+ return patterns.filter(([,re])=>re.test(title)).map(([label])=>label);
+}
+function includedMixTags(item){return item.tagMode==='replace'&&item.includeMix!==false?detectedMixTags(item):[]}
+function effectiveTags(item){const genre=String(finalValue(item,'Genre')??'').trim();const tags=[...(genre?[genre]:[]),...selectedTags(item),...includedMixTags(item)];return tags.filter((tag,i)=>tags.findIndex(other=>tagLabelKey(other)===tagLabelKey(tag))===i)}
+window.setIncludeMix=(id,enabled)=>{const item=editable(id);if(!item)return;item.includeMix=!!enabled;invalidate(item);render();controls()};
+function selectedTags(item){return (item.genreTags||[]).map(x=>typeof x==='string'?{label:x,enabled:true}:x).filter(x=>x.enabled!==false).map(x=>x.label)}
+async function connectLexicon(){
+ if(busy)return;
+ setBusy(true);connStatus.textContent='Connecting to Lexicon…';connStatus.className='status';
+ try{const d=await api('/v1/tracks?limit=1&offset=0');unwrapList(d);connected=true;connStatus.textContent='Connected to Lexicon';connStatus.className='status ok';$('#connectionError').textContent='';$('#connectionError').classList.toggle('hidden',true);try{parseTags(await api('/v1/tags'))}catch(e){dbg('Tags preload failed',e.message)}}
+ catch(e){connected=false;connStatus.textContent='Lexicon unavailable';connStatus.className='status bad';$('#connectionError').textContent='Open Lexicon DJ, go to Settings → Integrations, and enable Local API. Keep Lexicon running and open this reviewer through server.py. Once enabled, click Retry connection.';$('#connectionError').classList.toggle('hidden',false);dbg('Lexicon connection failed',e.message)}
+ finally{busy=false;render();controls()}
+}
+
+function parseTags(d){d=payload(d);allTags=unwrapList(d,['tags','customTags']);tagCategories=Array.isArray(d)?[]:unwrapList(d,['categories','customTagCategories']);tagSuggestions.innerHTML=allTags.map(t=>`<option value="${esc(val(t,'label','name'))}"></option>`).join('')}
+async function loadPage(offset=0){
+ if(busy)return;loadError='';setBusy(true);
+ try{status.textContent='Loading Lexicon tracks…';let tracks,total;
+ if(pageKind==='search'){tracks=searchTracks.slice(offset,offset+PAGE_SIZE);total=searchTracks.length}
+ else{const d=await api(`/v1/tracks?limit=${PAGE_SIZE}&offset=${offset}`);tracks=unwrapList(d);total=Number(payload(d)?.total??tracks.length)}
+ pageOffset=offset;pageTotal=total;makeRows(tracks);dbg('Loaded page',{offset,count:tracks.length,total});
+ }catch(e){dbg('Load failed',e.message);loadError='Load failed: '+e.message}finally{busy=false;render();controls();if(loadError)status.textContent=loadError}
+}
+async function loadFirst(){if(busy)return;searchNotice.textContent='';pageKind='library';await loadPage(0)}
+function searchQuery(){
+ const q=new URLSearchParams();for(const [field,input] of [['artist',lexArtist],['title',lexTitle],['genre',lexGenre],['albumTitle',lexAlbum]]){const text=input.value.trim();if(text)q.set(`filter[${field}]`,text)}
+ const tag=lexTag.value.trim();if(tag){const labels=[...new Set(allTags.map(t=>String(val(t,'label','name'))))];const exact=labels.find(x=>x.toLowerCase()===tag.toLowerCase());const partial=labels.filter(x=>x.toLowerCase().includes(tag.toLowerCase()));
+ if(!exact&&partial.length!==1)throw new Error(partial.length?`Several tags match “${tag}”: ${partial.slice(0,8).join(', ')}. Choose a full tag name from the suggestions.`:`No custom tag matches “${tag}”. Choose an existing tag from the suggestions.`);
+ q.set('filter[tags]',exact||partial[0]);}
+ return q;
+}
+async function searchLexicon(){
+ if(busy)return;
+ if(![lexArtist,lexTitle,lexGenre,lexAlbum,lexTag].some(input=>input.value.trim()))return loadFirst();
+ loadError='';searchNotice.textContent='';setBusy(true);
+ try{status.textContent='Searching Lexicon…';if(lexTag.value.trim())await refreshTags();const q=searchQuery();const d=await api('/v1/search/tracks?'+q);const list=unwrapList(d);searchTracks=list;pageKind='search';pageOffset=0;pageTotal=list.length;makeRows(list.slice(0,PAGE_SIZE));const total=Number(payload(d)?.total??list.length);dbg('Search parsed',{count:list.length,total});if(total>list.length)searchNotice.textContent=`Lexicon found ${total} matches but returned only the first ${list.length}. Narrow the filters to see other matches.`;
+ }catch(e){dbg('Search failed',e.message);loadError='Search failed: '+e.message;searchNotice.textContent=e.message}finally{busy=false;render();controls();if(loadError)status.textContent=loadError;else if(!rows.length)status.textContent='No Lexicon tracks matched'}
+}
+function registerRecord(result,provider,id){
+ result._provider=provider;result._recordId=(typeof id==='string'||typeof id==='number')?String(id):'';
+ if(result._recordId)sourceRecords.set(provider+':'+result._recordId,JSON.parse(JSON.stringify(result)));
+ return result;
+}
+function recordLabel(r){return `${r._source} · ID ${r._recordId||'not supplied'} · ${r.strArtist||'Unknown artist'} — ${r.strTrack||'Untitled'}${r.strAlbum?' · '+r.strAlbum:''}`}
+function recordHTML(item){
+ if(!advanced)return item.result?`<p class="muted">API match: ${esc(recordLabel(item.result))}</p>`:'';
+ const options=[...sourceRecords.entries()].map(([key,r])=>`<option value="${esc(key)}">${esc(recordLabel(r))}</option>`).join('');
+ return `<div class="tagbox"><b>Use metadata from a source record</b>${item.result?`<p class="muted">API match: ${esc(recordLabel(item.result))}</p>`:''}${item.reference?`<p class="muted">Selected record: ${esc(recordLabel(item.reference))}</p>`:''}
+ <div class="row"><label>Saved source records <select id="record-choice-${item.id}" aria-label="Source record for track ${item.id}" style="max-width:420px"><option value="">Choose a found record…</option>${options}</select></label><button class="secondary" onclick="useFoundRecord(${item.id})" ${!options?'disabled':''}>Use selected record</button></div>
+ <details style="margin-top:8px"><summary>Enter a source track ID</summary><div class="row" style="margin-top:8px"><select id="record-provider-${item.id}" aria-label="Record provider for track ${item.id}"><option value="audiodb">TheAudioDB</option><option value="sonovault">SonoVault</option></select><input id="record-id-${item.id}" type="text" placeholder="Provider track ID" aria-label="Record ID for track ${item.id}"><button class="secondary" onclick="loadRecordById(${item.id})">Load record by ID</button></div></details>
+ ${item.reference?`<p class="muted">Click values in Selected record to reuse individual fields. This does not identify or approve this local version.</p><button class="secondary" onclick="clearRecord(${item.id})">Remove selected record</button>`:''}
+ ${item.recordError?`<p role="alert" style="color:#b42318">${esc(item.recordError)}</p>`:''}</div>`;
+}
+function attachRecord(item,record){
+ item.tagMode??=tagDefaults.tagMode;item.reference=JSON.parse(JSON.stringify(record));item.recordError='';item.decision='pending';
+ FIELDS.forEach(f=>item.fields[f]='current');
+ item.genreTags=splitGenres(proposed(record,'Genre')).map(label=>({label,enabled:false}));
+ syncMainGenre(item);
+}
+window.useFoundRecord=id=>{const item=editable(id);if(!advanced||!item)return;const record=sourceRecords.get($(`#record-choice-${id}`).value);if(!record){item.recordError='Choose a source record first.'}else attachRecord(item,record);render();controls()};
+window.clearRecord=id=>{const item=editable(id);if(!advanced||!item)return;item.reference=null;item.recordError='';FIELDS.forEach(f=>{if(item.fields[f]==='record')item.fields[f]='current'});item.genreTags=[];syncMainGenre(item);invalidate(item);render();controls()};
+async function localMetadata(path){const response=await fetch('/metadata/'+path,{signal:AbortSignal.timeout(35000)});const data=await response.json();if(!response.ok)throw new Error(data.error||'Local metadata service failed');return data}
+async function fetchRecordById(provider,id){
+ id=String(id).trim();if(!/^[0-9]+$/.test(id))throw new Error('Enter the numeric track ID from the selected provider, not a Lexicon ID or album ID.');
+ if(!['audiodb','sonovault'].includes(provider))throw new Error('Choose a supported provider.');
+ const cached=sourceRecords.get(provider+':'+id);if(cached)return cached;
+ const {payload:d}=await localMetadata(provider+'/record?id='+encodeURIComponent(id));
+ const raw=provider==='audiodb'?d.track?.find(t=>String(t.idTrack)===id):(payload(d)?.track||payload(d));
+ const returnedId=provider==='audiodb'?raw?.idTrack:(raw?.id??raw?.track_id??raw?.trackId);
+ if(!raw||String(returnedId)!==id)throw new Error('The provider did not return the requested track ID.');
+ return commonResult(provider,raw,'','');
+}
+let historyEntries=[];
+window.openHistory=async()=>{
+ if(busy)return;$('#historyDialog').showModal();await loadHistory();
+};
+async function loadHistory(){
+ $('#historyMessage').textContent='Loading history…';
+ try{const data=await localMetadata('history');historyEntries=data.entries;$('#historyEntries').innerHTML=historyEntries.slice().reverse().map(entry=>{
+ const newest=historyEntries.filter(e=>e.track_id===entry.track_id&&e.status!=='restored').at(-1)?.id===entry.id;
+ const changes=Object.keys(entry.requested).map(key=>`<tr><td>${esc(key)}</td><td>${esc(JSON.stringify(entry.before.fields[key]))}</td><td>${esc(JSON.stringify(entry.after?.fields[key]??entry.requested[key]))}</td></tr>`).join('');
+ return `<section class="tagbox"><b>${esc(entry.before.fields.artist||'')} — ${esc(entry.before.fields.title||'Track '+entry.track_id)}</b><p class="muted">Lexicon ${entry.track_id} · ${esc(new Date(entry.time*1000).toLocaleString())} · ${esc(entry.status)}</p><table><thead><tr><th>Field</th><th>Before</th><th>After</th></tr></thead><tbody>${changes}</tbody></table><p class="muted">File before: ${esc(entry.before.location||'Unknown')}<br>File after: ${esc(entry.after?.location||'Not verified')}${entry.restore_before?'<br>File at restore: '+esc(entry.restore_before.location):''}</p>${entry.status==='applied'&&newest?`<button onclick="restoreHistory('${entry.id}')">Restore this change</button>`:entry.status==='pending'||entry.status==='restoring'?'<p>Outcome uncertain. Original values are saved; verify the track in Lexicon before proceeding.</p>':''}</section>`;
+ }).join('')||'<p>No changes recorded yet.</p>';$('#historyMessage').textContent=''}catch(e){$('#historyMessage').textContent='Could not load history. Restart server.py after updating. '+e.message}
+}
+window.restoreHistory=async id=>{
+ if(busy)return;const entry=historyEntries.find(e=>e.id===id);if(!entry||!confirm('Restore the previous values for '+(entry.before.fields.title||'this track')+'?\nFields: '+Object.keys(entry.requested).join(', ')+'\nAudio filenames will not be changed.'))return;
+ setBusy(true);$('#historyEntries').querySelectorAll('button').forEach(b=>b.disabled=true);
+ try{const response=await fetch('/metadata/history/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});const result=await response.json();if(!response.ok)throw Error(result.error||'Restore failed');reviewCache.delete(String(result.track_id));rows=rows.filter(item=>String(item.lexiconId)!==String(result.track_id));render();await loadHistory();$('#historyMessage').textContent='Restored. Reload or search the song to review its restored values.'}catch(e){$('#historyMessage').textContent=e.message}finally{busy=false;controls();$('#historyEntries').querySelectorAll('button').forEach(b=>b.disabled=false)}
+};
+let themePreference='system';
+const systemTheme=window.matchMedia?.('(prefers-color-scheme: dark)');
+function applyTheme(preference='system'){
+ themePreference=['light','dark','system'].includes(preference)?preference:'system';
+ const resolved=themePreference==='system'?(systemTheme?.matches?'dark':'light'):themePreference;
+ document.documentElement?.setAttribute('data-theme',resolved);
+}
+systemTheme?.addEventListener('change',()=>{if(themePreference==='system')applyTheme('system')});
+applyTheme();
+window.openSettings=async()=>{
+ if(busy)return;const dialog=$('#settingsDialog');$('#settingsMessage').textContent='Loading…';$('#settingsSave').disabled=true;$('#settingsSono').value='';$('#settingsAudio').value='';dialog.showModal();
+ try{const c=await localMetadata('config');if(!Object.hasOwn(c,'theme')||c.config_storage!=='env')throw Error('The running server is outdated and cannot save the current settings format. Stop server.py, start it again, then reopen Settings.');$('#settingsSono').placeholder=c.sonovault_configured?'********':'Enter API key';$('#settingsAudio').placeholder=c.audiodb_configured?'********':'Enter API key';$('#settingsTheme').value=c.theme||'system';$('#settingsDebug').checked=c.show_debug_log===true;$('#settingsAdvanced').checked=c.advanced_mode===true;$('#settingsOverwrite').checked=c.overwrite_custom_tags===true;$('#settingsMix').checked=c.include_mix_tags_from_title!==false;$('#settingsMessage').textContent='';$('#settingsSave').disabled=false}catch(e){$('#settingsMessage').textContent=e.message}
+};
+window.clearMetadataCache=async()=>{
+ if(busy)return;setBusy(true);$('#clearCacheButton').disabled=true;$('#settingsSave').disabled=true;$('#settingsMessage').textContent='Clearing cache…';
+ try{const response=await fetch('/metadata/cache/clear',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const data=await response.json();if(!response.ok||!data.cleared)throw Error(data.error||'Could not clear cache; restart server.py and try again.');sourceRecords.clear();render();$('#settingsMessage').textContent='Cache cleared. Future lookups will fetch fresh metadata.'}catch(e){$('#settingsMessage').textContent=e.message}finally{busy=false;controls();$('#clearCacheButton').disabled=false;$('#settingsSave').disabled=false}
+};
+window.saveSettings=async()=>{
+ if(busy)return;const changes={advanced_mode:$('#settingsAdvanced').checked,overwrite_custom_tags:$('#settingsOverwrite').checked,include_mix_tags_from_title:$('#settingsMix').checked,show_debug_log:$('#settingsDebug').checked,theme:$('#settingsTheme').value};
+ for(const [id,key] of [['settingsSono','sonovault_api_key'],['settingsAudio','audiodb_api_key']]){const value=$('#'+id).value.trim();if(value)changes[key]=value}
+ if(!confirm('Update settings?\n\n'+['Appearance: '+changes.theme,'Advanced mode: '+(changes.advanced_mode?'On':'Off'),'Overwrite custom tags by default: '+(changes.overwrite_custom_tags?'On':'Off'),'Include Mix tags from title: '+(changes.include_mix_tags_from_title?'On':'Off'),'Show debug log: '+(changes.show_debug_log?'On':'Off'),...(changes.sonovault_api_key?['Replace SonoVault API key']:[]),...(changes.audiodb_api_key?['Replace TheAudioDB API key']:[])].join('\n')))return;
+ $('#settingsSave').disabled=true;
+ try{const response=await fetch('/metadata/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(changes)});const data=await response.json();if(!response.ok)throw Error(data.error||'Could not save settings');tagDefaults={tagMode:data.overwrite_custom_tags?'replace':'add',includeMix:data.include_mix_tags_from_title};applyTheme(data.theme);window.setAdvanced(data.advanced_mode);$('#debugPanel').classList.toggle('hidden',!data.show_debug_log);configStatus.textContent=data.sonovault_configured?'SonoVault key configured':'Add your SonoVault key in Settings';$('#settingsSono').value='';$('#settingsAudio').value='';$('#settingsDialog').close()}catch(e){$('#settingsMessage').textContent=e.message}finally{$('#settingsSave').disabled=false}
+};
+async function loadLocalSettings(){
+ try{const settings=await localMetadata('config');applyTheme(settings.theme);tagDefaults={tagMode:settings.overwrite_custom_tags===true?'replace':'add',includeMix:settings.include_mix_tags_from_title!==false};advancedMode.checked=settings.advanced_mode===true;window.setAdvanced(advancedMode.checked);$('#debugPanel').classList.toggle('hidden',!settings.show_debug_log);configStatus.textContent=settings.sonovault_configured?'SonoVault key configured':'Add your SonoVault key once in .env';const saved=await localMetadata('records');for(const entry of saved.records)commonResult(entry.provider,entry.record,'','');render();controls()}
+ catch(e){configStatus.textContent='Restart server.py to enable local configuration and caching.';dbg('Local setup',e.message)}
+}
+window.loadRecordById=async id=>{
+ const item=editable(id);if(!advanced||!item)return;const provider=$(`#record-provider-${id}`).value,recordId=$(`#record-id-${id}`).value;setBusy(true);
+ try{const record=await fetchRecordById(provider,recordId);attachRecord(item,record)}catch(e){item.recordError='Could not load record: '+e.message}finally{busy=false;render();controls()}
+};
+function commonResult(source,c,artist,title){
+ if(source==='audiodb'){
+  const score=(similarity(c.strArtist,artist)+similarity(c.strTrack,title))/2;
+  const r={strTrack:c.strTrack||'',strArtist:c.strArtist||'',strAlbum:c.strAlbum||'',strGenre:c.strGenre||'',intYearReleased:c.intYearReleased||c.intYear||'',intTrackNumber:c.intTrackNumber||'',strLabel:c.strLabel||'',_source:'TheAudioDB',_score:score,_raw:c,_sources:{}};
+  FIELDS.forEach(f=>{if(proposed(r,f)!=='')r._sources[f]='TheAudioDB'});return registerRecord(r,'audiodb',c.idTrack);
+ }
+ const artists=Array.isArray(c.artists)?c.artists.map(a=>typeof a==='string'?a:(a.name||a.artist||'')).filter(Boolean):[];
+ const artistName=artists.join(', ')||c.artist||c.artist_name||c.artistName||'';
+ const releases=Array.isArray(c.releases)?c.releases:[]; const rel=releases[0]||c.release||{};
+ const album=(typeof rel==='string'?rel:(rel.title||rel.name||rel.album||''))||c.album||c.release_title||'';
+ let genres=c.genres??c.genre??c.genre_tags??c.tags??[]; if(Array.isArray(genres))genres=genres.map(g=>typeof g==='string'?g:(g.name||g.label||g.genre||'')).filter(Boolean).join(', '); else if(genres&&typeof genres==='object')genres=Object.values(genres).filter(v=>typeof v==='string').join(', ');
+ const date=c.release_date||c.releaseDate||c.date||(typeof rel==='object'&&(rel.release_date||rel.releaseDate||rel.date||rel.year))||''; const year=String(date||'').match(/\b(19|20)\d{2}\b/)?.[0]||c.year||'';
+ let label=c.label||c.record_label||(typeof rel==='object'&&(rel.label?.name||rel.label||rel.record_label))||''; if(label&&typeof label==='object')label=label.name||label.label||'';
+ const score=(similarity(artistName,artist)+similarity(c.title||c.name||'',title))/2;
+ const r={strTrack:c.title||c.name||'',strArtist:artistName,strAlbum:album,strGenre:genres||'',intYearReleased:year,intTrackNumber:c.track_number||c.trackNumber||c.position||'',strLabel:label||'',_source:'Sonovault',_score:Number.isFinite(score)?score:0,_raw:c,_sources:{}};
+ FIELDS.forEach(f=>{if(proposed(r,f)!=='')r._sources[f]='Sonovault'});return registerRecord(r,'sonovault',c.id??c.track_id??c.trackId);
+}
+async function lookupAudioDB(artist,title){
+ const {payload:d}=await localMetadata('audiodb/search?'+new URLSearchParams({artist,title}));const candidates=d.track||[];
+ return candidates.map(c=>commonResult('audiodb',c,artist,title)).sort((a,b)=>b._score-a._score)[0]||null;
+}
+async function lookupSonovault(artist,title){
+ const {payload:d}=await localMetadata('sonovault/search?'+new URLSearchParams({artist,title}));
+ return unwrapList(d).map(c=>commonResult('sonovault',c,artist,title)).sort((a,b)=>b._score-a._score)[0]||null;
+}
+function usefulMissing(r){return ['AlbumTitle','Genre','Year','TrackNumber','Label'].some(f=>!proposed(r,f))}
+function mergeResults(primary,secondary){
+ if(!primary)return secondary;if(!secondary)return primary;
+ const chosen=(primary._score||0)<.55&&(secondary._score||0)>(primary._score||0)+.08?secondary:primary;
+ return {...chosen,_alternative:chosen===primary?secondary:primary};
+}
+async function metadataLookup(item,audioKey,svKey,mode){
+ const artist=val(item.original,'Artist'),title=val(item.original,'Title');item.result=null;item.error=null;item.tagMode??=tagDefaults.tagMode;item.decision='pending';item.fields={};item.genreTags=[];item.mainGenre='';if(!artist||!title){item.error='Missing Artist or Title';return}
+ const get=async src=>src==='audiodb'?lookupAudioDB(artist,title,audioKey):lookupSonovault(artist,title,svKey);
+ const pair=mode.split('-');try{
+  let first=null,primaryError='';try{first=await get(pair[0])}catch(e){if(pair.length===1)throw e;primaryError=e.message}let result=first;
+  if(pair.length>1&&(!first||usefulMissing(first)||(first._score||0)<.55)){let second=null;try{second=await get(pair[1])}catch(e){if(!first)throw e}result=mergeResults(first,second)}
+  if(!result){item.error=primaryError?'Primary lookup failed: '+primaryError+'; fallback found no match':'No match';return}item.result=result;if((result._score||0)<.55)item.error='Low-confidence result';initChoices(item)
+ }catch(e){item.error='API error: '+e.message}
+}
+async function lookupAll(){
+ if(busy)return;setBusy(true);const akey='',svkey='',mode=metadataSource.value;localStorage.setItem('metadataSource',mode);
+ try{const pending=rows.filter(r=>!r.applied);for(let i=0;i<pending.length;i++){await metadataLookup(pending[i],akey,svkey,mode);render();controls();status.textContent=`Looked up ${i+1} of ${pending.length}`;if(i<pending.length-1)await new Promise(r=>setTimeout(r,mode.includes('sonovault')?3100:2100))}}finally{busy=false;render();controls()}
+}
+function tagLabelKey(label){return String(label??'').normalize('NFC').trim().replace(/\s+/g,' ').toLowerCase()}
+function validLexiconId(id){return (typeof id==='number'||typeof id==='string')&&String(id).trim()!==''&&Number.isSafeInteger(Number(id))&&Number(id)>0}
+async function refreshTags(){parseTags(await api('/v1/tags'))}
+function findExistingTag(label,categoryId){
+ const matches=allTags.filter(t=>tagLabelKey(val(t,'label','name'))===tagLabelKey(label)&&validLexiconId(t.id));
+ return matches.find(t=>String(t.categoryId)===String(categoryId))||matches[0];
+}
+function findGenreCategory(){return tagCategories.find(c=>tagLabelKey(val(c,'label','name'))==='genre'&&validLexiconId(c.id))}
+function createdEntity(response,key){const body=payload(response),entity=body?.[key]||body;if(!entity||!validLexiconId(entity.id))throw new Error('Lexicon returned no valid '+key+' ID. Refresh and retry.');return entity}
+function isDuplicateError(error){return /already exists|duplicate/i.test(String(error?.message||''))}
+async function ensureGenreCategory(){return ensureCategory('Genre')}
+async function ensureCategory(label){
+ const findCategory=()=>tagCategories.find(c=>tagLabelKey(val(c,'label','name'))===tagLabelKey(label)&&validLexiconId(c.id));
+ let cat=findCategory();if(cat)return cat;
+ await refreshTags();cat=findCategory();if(cat)return cat;
+ try{cat=createdEntity(await api('/v1/tag-category',{method:'POST',body:JSON.stringify({label})}),'category');tagCategories.push(cat);return cat}
+ catch(e){if(!isDuplicateError(e))throw e;await refreshTags();cat=findCategory();if(cat)return cat;throw e}
+}
+async function ensureTag(label,categoryId){
+ label=String(label??'').trim();if(!label)throw new Error('A custom tag label cannot be empty.');
+ let tag=findExistingTag(label,categoryId);if(tag)return tag;
+ await refreshTags();tag=findExistingTag(label,categoryId);if(tag)return tag;
+ // Labels already present in another category are reused without moving them.
+ const cat=categoryId?tagCategories.find(c=>String(c.id)===String(categoryId)):await ensureGenreCategory();
+ if(!cat||!validLexiconId(cat.id))throw new Error('Could not resolve the custom tag category.');
+ try{tag=createdEntity(await api('/v1/tag',{method:'POST',body:JSON.stringify({label,categoryId:Number(cat.id)})}),'tag');allTags.push(tag);return tag}
+ catch(e){if(!isDuplicateError(e))throw e;await refreshTags();tag=findExistingTag(label,cat.id);if(tag)return tag;throw e}
+}
+async function patchTrack(id,patch){
+ if(!validLexiconId(id))throw new Error('Track has no valid Lexicon ID');
+ return api('/v1/track',{method:'PATCH',body:JSON.stringify({id:Number(id),edits:patch})});
+}
+async function applyOne(item){
+ if(!validLexiconId(item.lexiconId))throw new Error('Track has no valid Lexicon ID');
+ if(invalidManual(item))throw new Error('Correct invalid typed fields before applying.');
+ if(!advanced&&Object.values(item.fields).some(c=>['record','manual'].includes(c)))throw new Error('Enable Advanced mode to use record or typed values.');
+ const patch={},map={Title:'title',Artist:'artist',AlbumTitle:'albumTitle',Genre:'genre',Year:'year',TrackNumber:'trackNumber',Label:'label'};
+ for(const f of FIELDS){const p=chosenValue(item,f);if(['api','record','manual'].includes(item.fields[f])&&canUse(item,f,item.fields[f])&&(p!==''||item.fields[f]==='manual'))patch[map[f]]=f==='Year'||f==='TrackNumber'?Number(p):p}
+ if(['api','record'].includes(item.fields.Genre)&&item.mainGenre)patch.genre=item.mainGenre;
+ for(const field of ['year','trackNumber'])if(field in patch&&(!Number.isInteger(patch[field])||patch[field]<0))throw new Error('Invalid numeric value for '+field);
+ const wanted=effectiveTags(item);
+ if(wanted.length||item.tagMode==='replace'){
+  // Read the latest tags to avoid replacing tags added since this page loaded.
+  const d=payload(await api('/v1/track?id='+encodeURIComponent(item.lexiconId))),current=d?.track;
+  if(!current||String(current.id)!==String(item.lexiconId)||!Array.isArray(current.tags)||!current.tags.every(validLexiconId))throw new Error('Could not read current track tags; no track update was sent.');
+  const ids=[];for(const label of wanted){const categoryId=includedMixTags(item).includes(label)&&!findExistingTag(label)?(await ensureCategory('Mix')).id:undefined;ids.push(Number((await ensureTag(label,categoryId)).id))}
+  patch.tags=[...new Set(item.tagMode==='replace'?ids:[...current.tags.map(Number),...ids])];
+ }
+ if(Object.keys(patch).length)await patchTrack(item.lexiconId,patch);
+ item.applied=true;if(item.error?.startsWith('Lexicon write failed:'))item.error=null;
+}
+function applyConfirmation(todo){
+ const replaced=todo.filter(item=>item.tagMode==='replace');
+ return `Apply changes to ${todo.length} accepted Lexicon track(s)?`+(replaced.length?'\n\nREPLACE ALL CUSTOM TAGS on these songs:\n'+replaced.map(item=>`${val(item.original,'Artist')} – ${val(item.original,'Title')} (Lexicon ${item.lexiconId}): ${effectiveTags(item).length?effectiveTags(item).join(', '):'CLEAR ALL CUSTOM TAGS'}`).join('\n'):'')+'\n\nOther songs keep their existing custom tags and add the selected genre and checked tags.';
+}
+async function applyAccepted(){if(busy)return;const todo=rows.filter(r=>r.decision==='accepted'&&hasProposal(r)&&!invalidManual(r)&&!r.applied);if(!todo.length)return;if(!confirm(applyConfirmation(todo)))return;setBusy(true);try{if(todo.some(item=>effectiveTags(item).length))await refreshTags()}catch(e){busy=false;render();controls();alert('Could not refresh Lexicon tags: '+e.message);return}for(let i=0;i<todo.length;i++){status.textContent=`Applying ${i+1} of ${todo.length} to Lexicon…`;try{await applyOne(todo[i])}catch(e){todo[i].error='Lexicon write failed: '+e.message;render();alert(`Stopped on ${val(todo[i].original,'Artist')} – ${val(todo[i].original,'Title')}\n\n${e.message}`);break}render();controls()}busy=false;render();controls()}
+function parseCSV(text){const out=[];let row=[],f='',q=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(q){if(c==='"'&&n==='"'){f+='"';i++}else if(c==='"')q=false;else f+=c}else{if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'){row.push(f);out.push(row);row=[];f=''}else if(c!=='\r')f+=c}}if(f.length||row.length){row.push(f);out.push(row)}return out.filter(r=>r.some(v=>v!==''))}
+function importCSV(text){const p=parseCSV(text);if(p.length<2)throw new Error('CSV has no rows');const h=p[0].map(x=>x.trim());rows=p.slice(1).map((r,i)=>{const o={};h.forEach((k,j)=>o[k]=r[j]||'');return{id:i+1,original:o,...tagDefaults,result:null,decision:'pending',error:null,fields:{},mainGenre:'',genreTags:[],applied:false}});render();controls()}
+function toCSV(m){return m.map(r=>r.map(v=>{const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s}).join(',')).join('\r\n')}
+function reviewedCSV(){if(rows.some(x=>x.decision==='accepted'&&invalidManual(x)))throw new Error('Correct invalid typed fields before exporting.');const h=['Location',...FIELDS,'CustomGenreTags','CustomTagAction'];const m=[h];rows.filter(x=>x.decision==='accepted'&&hasProposal(x)).forEach(x=>{const o={Location:val(x.original,'Location'),CustomTagAction:x.tagMode==='replace'?'replace':'add',CustomGenreTags:effectiveTags(x).map(t=>'#'+t.replace(/\s+/g,'_')).join(' ')};FIELDS.forEach(f=>{o[f]=chosenValue(x,f)});if(['api','record'].includes(x.fields.Genre)&&x.mainGenre)o.Genre=x.mainGenre;m.push(h.map(k=>o[k]??''))});return toCSV(m)}
+function download(){const b=new Blob([reviewedCSV()],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='lexicon-reviewed-metadata.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function setMode(mode){if(busy)return;rememberRows();pageOffset=0;pageTotal=0;sourceMode=mode;lexPanel.classList.toggle('hidden',mode!=='lexicon');csvPanel.classList.toggle('hidden',mode!=='csv');lexTab.classList.toggle('active',mode==='lexicon');csvTab.classList.toggle('active',mode==='csv');rows=[];render();controls()}
+loadTracks.onclick=loadFirst;lexSearch.onclick=searchLexicon;searchBtn.onclick=lookupAll;acceptAll.onclick=()=>{if(busy)return;rows.forEach(r=>{if(bulkEligible(r))r.decision='accepted'});render();controls()};rejectAll.onclick=()=>{if(busy)return;rows.forEach(r=>{if(!r.applied)r.decision='rejected'});render();controls()};applyBtn.onclick=applyAccepted;exportBtn.onclick=download;lexTab.onclick=()=>setMode('lexicon');csvTab.onclick=()=>setMode('csv');csvFile.onchange=async e=>{if(e.target.files[0])importCSV(await e.target.files[0].text())};loadDemo.onclick=()=>importCSV('Location,Title,Artist,AlbumTitle,Genre,Year\n/Volumes/Music/Beyonce - Crazy in Love.mp3,Crazy in Love,Beyoncé,,HipHap,2003');
+window.addEventListener('error',e=>console.error('[JS ERROR]',e.message,e.filename+':'+e.lineno+':'+e.colno,e.error));
+window.addEventListener('unhandledrejection',e=>console.error('[UNHANDLED PROMISE]',e.reason));
+console.info('[App] Lexicon Metadata Reviewer loaded',new Date().toISOString());
+localStorage.removeItem('sonovaultKey');metadataSource.value=localStorage.getItem('metadataSource')||'audiodb-sonovault';
+prevPage.onclick=()=>loadPage(Math.max(0,pageOffset-PAGE_SIZE));nextPage.onclick=()=>loadPage(pageOffset+PAGE_SIZE);
+for(const input of [lexArtist,lexTitle,lexGenre,lexAlbum,lexTag])input.onkeydown=e=>{if(e.key==='Enter'&&connected&&!busy)searchLexicon()};
+advancedMode.onchange=()=>window.setAdvanced(advancedMode.checked);
+window.addEventListener('load',async()=>{await loadLocalSettings();await connectLexicon()});
+render();controls();
+</script></body></html>

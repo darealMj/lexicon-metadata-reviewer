@@ -1,0 +1,26 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'..','index.html'),'utf8');
+const elements={};const el=id=>elements[id]??=( {value:'',textContent:'',innerHTML:'',disabled:false,classList:{toggle(){}},options:[{text:'test'}],selectedIndex:0});
+const context={document:{querySelector:s=>el(s),querySelectorAll:()=>[]},window:{addEventListener(){}},console:{info(){},error(){},warn(){}},localStorage:{setItem(){},getItem(){return null},removeItem(){}},URLSearchParams,performance, setTimeout, clearTimeout,alert(){},confirm:()=>false,fetch:()=>{throw Error('Unexpected network')}};vm.createContext(context);vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],context);
+const run=s=>vm.runInContext(s,context);
+(async()=>{
+run('async function api(path){return {data:{track:{id:Number(path.split("=")[1]),tags:[]}}}};async function ensureTag(){return {id:101}}');
+assert.equal(run('unwrapList({data:{tracks:[{id:1}]}}).length'),1);
+assert.equal(run('unwrapList({tracks:[]}).length'),0);assert.throws(()=>run('unwrapList({data:{error:"bad"}})'));
+run('parseTags({data:{categories:[{id:1}],tags:[{id:2}]}})');assert.equal(run('allTags.length+tagCategories.length'),2);
+assert.equal(run('normalize("Daft Punk")'),'daft punk');assert.equal(run('normalize("宇多田ヒカル")'),'宇多田ヒカル');
+run('makeRows([{id:1,title:"Song (Clean Intro)",artist:"Artist",genre:"Reggae",tags:[]}]);rows[0].result={strTrack:"Song",strArtist:"Artist",strGenre:"Pop",_score:1};initChoices(rows[0]);');
+assert.equal(run('rows[0].fields.Title'),'current');
+run('window.allFields(1,"api")');assert.equal(run('rows[0].fields.Title'),'current');
+run('window.fieldChoice(1,"Genre","current");rows[0].genreTags=[];rows[0].decision="accepted";async function patchTrack(id,p){globalThis.captured=p}');
+await run('applyOne(rows[0])');assert.equal(run('captured.genre'),undefined);assert.equal(run('captured.title'),undefined);
+assert.match(run('reviewedCSV()'),/Reggae/);
+run('rows[0].applied=false;rows[0].genreTags=["Pop"];window.toggleGenreTag(1,0,false)');assert.equal(run('selectedTags(rows[0]).length'),0);assert.ok(!run('tagHTML(rows[0])').includes('[object Object]'));assert.ok(!run('tagHTML(rows[0])').includes('checkbox" checked'));
+run('rows[0].decision="accepted";window.fieldChoice(1,"Year","current")');assert.equal(run('rows[0].decision'),'pending');
+run('async function lookupAudioDB(){throw Error("offline")};async function lookupSonovault(){return {strTrack:"Song",strArtist:"Artist",strGenre:"Soul",_score:.9}};rows[0].decision="accepted"');await run('metadataLookup(rows[0],"123","x","audiodb-sonovault")');assert.equal(run('rows[0].decision'),'pending');assert.equal(run('rows[0].result.strGenre'),'Soul');
+assert.equal(run('mergeResults({strTrack:"A",_score:.9},{strTrack:"B",strAlbum:"Wrong",_score:1}).strAlbum'),undefined);
+run('rows[0].error="Low-confidence result"');assert.equal(run('bulkEligible(rows[0])'),false);
+run('async function api(path){globalThis.lastPath=path;return {data:{total:201,limit:100,offset:100,tracks:[{id:101,title:"Second page",artist:"A"}]}}};rows=[]');await run('loadPage(100)');assert.equal(run('lastPath'),'/v1/tracks?limit=100&offset=100');assert.equal(run('rows[0].lexiconId'),101);assert.equal(run('pageTotal'),201);
+run('lexArtist.value="A";lexTitle.value=""');await run('searchLexicon()');assert.equal(run('rows.length'),1);assert.ok(run('lastPath').startsWith('/v1/search/tracks?'));
+console.log('PASS: nested parsing, malformed responses, tags, Unicode normalization, DJ title protection, genre write/export, checkbox rendering, approval reset, error fallback, no cross-candidate merging, bulk exclusions, paging and search.');
+})().catch(e=>{console.error(e);process.exit(1)});
