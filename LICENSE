@@ -1,0 +1,85 @@
+Lexicon Metadata Reviewer Source-Available License
+Version 1.0 — September 9, 2026
+
+Copyright (c) 2026 darealMJ and contributors.
+
+1. Scope
+
+“Software” means the Lexicon Metadata Reviewer code, documentation, and project
+assets supplied under this license. “Modified Version” means a version of the
+Software that changes or incorporates any substantial portion of that material.
+This license grants rights only to material that its copyright holders have the
+authority to license. Separately licensed third-party material remains subject
+to its own terms.
+
+2. Permitted use
+
+Subject to the conditions below, you may use, run, study, copy, and modify the
+Software without paying a license fee. This includes personal, educational,
+professional, and business use. DJs may use the Software in connection with paid
+performances, music-library preparation, and other professional services.
+
+You may fork the project and distribute the Software or Modified Versions,
+in source or executable form, at no charge to recipients. Contributions to the
+official repository may be proposed through pull requests; this license does
+not grant permission to merge changes or require the maintainer to accept them.
+
+3. No sale or paid access
+
+Without prior written permission from the applicable copyright holders, you
+must not sell, rent, lease, or charge a license, download, subscription, or
+access fee for the Software or any Modified Version. This restriction also
+applies when the Software or a Modified Version is supplied as a paid feature
+or bundled into a paid software product. Renaming, repackaging, or modifying
+the Software does not remove this restriction.
+
+This restriction concerns charging for the Software itself. It does not
+prohibit earning money from performances, work products, or other services
+created or performed using it. You may charge separately for optional support,
+training, or consulting, provided that recipients are not required to purchase
+those services to receive or use your otherwise freely distributed copy of the
+Software. Voluntary donations must not be a condition of access or use.
+
+4. Conditions of redistribution
+
+Include this license and the applicable copyright notices with every copy or
+substantial portion of the Software that you distribute. Clearly identify
+Modified Versions as modified, and do not imply endorsement by the original
+maintainer. Recipients must receive the permissions in this license for the
+covered Software, subject to the same no-sale restriction and other conditions.
+You may not relicense covered material under terms that permit its sale or paid
+access without the copyright holders’ written permission.
+
+This license does not grant rights to third-party music, metadata-provider
+services, trademarks, or other independently owned content. It does not waive
+any terms or fees imposed by those third parties.
+
+5. Termination
+
+Your permissions under this license terminate if you violate its conditions.
+After termination, stop using and distributing the Software unless the
+applicable copyright holders reinstate your permissions in writing. Recipients
+who received copies in compliance with this license retain their own permissions
+so long as they comply with its terms.
+
+6. No warranty; limitation of liability
+
+To the maximum extent permitted by applicable law, the Software is provided
+as-is and as-available, without warranties of any kind, whether express,
+implied, or statutory, including warranties of merchantability, fitness for a
+particular purpose, title, and non-infringement. You are responsible for testing
+the Software and maintaining backups of your library and files.
+
+To the maximum extent permitted by applicable law, the copyright holders and
+contributors are not liable for loss of data, lost profits, business
+interruption, or other damages arising from use of or inability to use the
+Software, whether the claim arises in contract, tort, or another legal theory.
+Nothing in this license excludes liability that applicable law does not allow
+to be excluded.
+
+7. Reserved rights and separate permissions
+
+Rights not expressly granted are reserved. Separate written permissions may
+be obtained from the applicable copyright holders. This is a custom
+source-available license, not the MIT License, GNU GPL, or an OSI-approved
+open-source license.

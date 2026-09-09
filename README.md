@@ -29,6 +29,10 @@ Use `Ctrl+C` to stop the server. After updating application code, stop and resta
 
 > Before your first real batch, make a Lexicon database backup and try a few tracks you can verify. Lookup alone does not modify your library; applying and restoring require confirmation.
 
+![Lexicon library search with artist, title, genre, album, and custom-tag filters](assets/screenshots/library-search.png)
+
+*Search your local library, choose a metadata provider, and start a lookup.*
+
 ## Review your tracks
 
 1. Search your Lexicon library by artist, title, genre, album, or custom tag, or load the first 100 tracks.
@@ -36,6 +40,10 @@ Use `Ctrl+C` to stop the server. After updating application code, stop and resta
 3. Click individual values in **Current** or **API match**. **Final output** shows the values to apply.
 4. Review the custom tags and version markers, then **Accept** the song.
 5. Click **Apply accepted on this page** and review the confirmation.
+
+![Per-field metadata review showing Current, API match, Typed, Final output, and custom-tag selections](assets/screenshots/metadata-review.png)
+
+*Keep values from different sources in the same track; the green column previews the final metadata.*
 
 Only accepted songs on the current page are applied or exported. Changing a selection resets that song’s acceptance. The bulk-accept control excludes replacements, manual/source-record choices, low-confidence results, and warnings.
 
@@ -140,7 +148,7 @@ done
 
 Tests cover configuration creation/migration, secret handling, parser behavior, tag operations, themes, connection flow, cache behavior, and journal/restore safeguards. They do not write to your live Lexicon library.
 
-Contributions and forks are welcome. Include a clear reproduction and relevant test results with fixes. Never include `.env`, cache/history files, real keys, or private library data in commits or issues. See `.env.example` for public defaults. A project license should be selected before redistribution permissions are advertised beyond GitHub forking.
+Contributions and forks are welcome. Include a clear reproduction and relevant test results with fixes. Never include `.env`, cache/history files, real keys, or private library data in commits or issues. See `.env.example` for public defaults. See [LICENSE](LICENSE) for the terms governing use and redistribution.
 
 ## Source layout
 
@@ -158,3 +166,9 @@ Contributions and forks are welcome. Include a clear reproduction and relevant t
 Modules use browser-native imports; no bundler is required. The server explicitly allows only public HTML, JavaScript, CSS, and logo paths. When adding a public asset, update that allowlist and its test. Never allow an entire directory of private application files.
 
 `node tests/modules.cjs` checks real ES-module linking, startup, UI handlers, and a mocked apply flow. It automatically enables Node’s experimental VM-module flag for this test only. Older behavior suites use the compatibility helper in `tests/helpers/frontend.cjs` to retain their existing mocks.
+
+## License
+
+Free for personal and professional use, including paid DJ work. You may modify, fork, and redistribute the app for free, retaining the license and copyright notices. **Selling the app or modified versions, charging for access, or bundling it into a paid software product requires written permission.**
+
+Licensed under the custom [Lexicon Metadata Reviewer Source-Available License](LICENSE). See the [licensing guide](docs/LICENSING.md) for examples. This is source-available software, not an OSI-approved open-source release.
