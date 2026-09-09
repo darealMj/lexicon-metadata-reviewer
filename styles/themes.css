@@ -1,0 +1,794 @@
+/* Music-library theme */
+:root {
+  color-scheme: dark;
+  --canvas: #101114;
+  --panel: #191b20;
+  --line: #30333b;
+  --text: #eeeef2;
+  --muted: #a4a7b3;
+  --accent: #ed4e86;
+}
+body {
+  background: var(--canvas);
+  color: var(--text);
+}
+.wrap {
+  max-width: 1800px;
+  padding: 26px 32px;
+}
+.app-header {
+  padding: 0 0 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.brand-disc {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: var(--accent);
+  border-radius: 50%;
+  color: #111;
+  font-size: 38px;
+}
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  font-weight: 700;
+}
+h1 {
+  margin: 5px 0 0;
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.7px;
+}
+h1 span {
+  font-weight: 450;
+  color: #c4c6d0;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid #292c34;
+  border-radius: 10px;
+  box-shadow: none;
+  padding: 20px;
+  margin: 14px 0;
+}
+.navigation {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 0;
+  margin: 0 0 22px;
+}
+.tabs {
+  gap: 22px;
+}
+.tab,
+.tab.active {
+  background: transparent;
+  border-radius: 0;
+  padding: 14px 2px;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+.tab.active {
+  border-bottom-color: var(--accent);
+  color: white;
+}
+.section-label {
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 1.5px;
+  color: #dadce5;
+  margin-bottom: 18px;
+}
+.section-label span {
+  font-size: 12px;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 15px;
+}
+p,
+.muted,
+.head,
+.field-name {
+  color: var(--muted);
+}
+button {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+}
+button:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+button.secondary {
+  background: #2b2e37;
+  color: #e0e2eb;
+}
+.success {
+  background: #287957 !important;
+}
+.danger {
+  background: #57303a !important;
+  color: #ffb8c5 !important;
+}
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select {
+  background: #111318;
+  color: #eeeef2;
+  border-color: #3a3d47;
+  border-radius: 6px;
+}
+input::placeholder {
+  color: #777c8d;
+}
+label {
+  font-size: 13px;
+}
+#lexPanel > .row {
+  margin-bottom: 14px;
+}
+#lexPanel label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#lexPanel input {
+  max-width: 210px;
+}
+#lexPanel hr {
+  border-color: var(--line) !important;
+}
+.status {
+  background: #292c36;
+  color: #b8bfd2;
+  font-size: 12px;
+}
+.status.ok,
+.accepted {
+  background: #213c31;
+  color: #8fd7b1;
+}
+.status.bad,
+.rejected {
+  background: #492a33;
+  color: #ffb3c1;
+}
+.pending {
+  background: #433925;
+  color: #e8ce8c;
+}
+.applied {
+  background: #253c52;
+  color: #9dcaef;
+}
+#connectionError {
+  color: #ffb3c1 !important;
+}
+.table-wrap {
+  border-color: var(--line);
+  border-radius: 8px;
+}
+th {
+  background: #22252c;
+  color: #a8adbd;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 13px 9px;
+}
+td {
+  border-color: var(--line);
+}
+tbody > tr > td {
+  border-bottom: 7px solid var(--canvas);
+}
+.track-title {
+  color: #f2f2f6;
+  min-width: 180px;
+}
+.location {
+  font-size: 11px;
+  color: #868d9e;
+}
+.field-grid {
+  gap: 3px 6px;
+}
+.column-current {
+  --column-accent: #8f96a8;
+  background: #23262d;
+}
+.column-api {
+  --column-accent: #6eaaf0;
+  background: #1b2c41;
+}
+.column-record {
+  --column-accent: #b699e7;
+  background: #2e2440;
+}
+.column-manual {
+  --column-accent: #d3b473;
+  background: #352f23;
+}
+.column-final {
+  --column-accent: #79cda3;
+  background: #1e372d;
+}
+.field-grid > .head {
+  color: var(--column-accent);
+  font-size: 10px;
+}
+.source-cell,
+.final-value {
+  border: 0;
+}
+.source-value {
+  color: #cbd1df;
+  background: transparent;
+  font-weight: 450;
+}
+.source-value.active {
+  color: #fff;
+  background: #ffffff12;
+  border: 2px solid var(--column-accent);
+  box-shadow: none;
+}
+.source-value:hover:not(:disabled) {
+  background: #ffffff0d;
+}
+.source-value:disabled {
+  opacity: 0.35;
+}
+.typed-value {
+  background: #16181e !important;
+  color: #eee !important;
+}
+.typed-value.active {
+  background: #352f23 !important;
+}
+.final-value {
+  color: #b4e7cb;
+}
+.head.column-final {
+  color: #79cda3;
+}
+.tagbox {
+  background: #15171c;
+  border-color: #30343e;
+}
+.tagchip {
+  background: #242730;
+  border-color: #3c4150;
+  color: #d8dce6;
+}
+.tagrow button {
+  font-size: 11px;
+  padding: 5px 8px;
+}
+.tagbox p[style*="color"] {
+  color: #edbc86 !important;
+}
+.tagbox input[role="switch"]:checked {
+  background: var(--accent);
+}
+input[role="switch"] {
+  background: #555a68;
+}
+input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+.main-genre {
+  color: #b4e7cb;
+}
+dialog {
+  background: #1c1f26;
+  color: var(--text);
+  border-color: #3c4150 !important;
+  box-shadow: 0 25px 100px #0009;
+}
+dialog::backdrop {
+  background: #08090dbc;
+}
+dialog p {
+  line-height: 1.5;
+}
+#settingsButton {
+  background: #252831;
+  color: #eee;
+  border-color: #3b3e49;
+}
+#debugLog {
+  color: #b5c4d9;
+}
+button:focus-visible,
+input:focus-visible {
+  outline-color: #f59fbe;
+}
+.review-card {
+  padding: 16px;
+}
+.actions {
+  min-width: 120px;
+}
+.actions button {
+  font-size: 11px;
+}
+.small {
+  line-height: 1.6;
+}
+@media (max-width: 800px) {
+  .wrap {
+    padding: 16px;
+  }
+  .app-header {
+    gap: 10px;
+  }
+  h1 {
+    font-size: 18px;
+  }
+  .brand-disc {
+    width: 36px;
+    height: 36px;
+    font-size: 28px;
+  }
+  .section-label span {
+    display: block;
+    margin: 7px 0 0;
+  }
+  .card {
+    padding: 14px;
+  }
+}
+
+.help-wrap {
+  position: relative;
+  display: inline-flex;
+  margin: 8px 8px 0 0;
+  vertical-align: middle;
+  cursor: default;
+}
+.info-button {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  background: #aab2c4;
+  color: #15171c;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: Georgia, serif;
+  cursor: pointer;
+  user-select: none;
+}
+.help-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 0;
+  width: min(350px, 75vw);
+  padding: 14px 16px;
+  background: #303642;
+  color: #f2f3f7;
+  border: 1px solid #586173;
+  box-shadow: 0 8px 30px #0006;
+  border-radius: 9px;
+  font-size: 12px;
+  line-height: 1.6;
+  z-index: 20;
+  cursor: default;
+}
+.help-wrap:hover .help-tooltip,
+.help-wrap:focus-within .help-tooltip {
+  display: block;
+}
+.help-tooltip:after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 7px;
+  width: 10px;
+  height: 10px;
+  background: #303642;
+  transform: rotate(45deg);
+  border-right: 1px solid #586173;
+  border-bottom: 1px solid #586173;
+}
+#historyDialog table {
+  table-layout: fixed;
+}
+#historyDialog td,
+#historyDialog p {
+  overflow-wrap: anywhere;
+}
+#historyDialog {
+  max-height: 85vh;
+  overflow: auto;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #f1f3f7;
+  --panel: #fff;
+  --line: #d8dde6;
+  --text: #242934;
+  --muted: #626c7e;
+  --accent: #b92560;
+}
+:root[data-theme="light"] h1 span {
+  color: #626c7e;
+}
+:root[data-theme="light"] .card {
+  border-color: #dce1e9;
+  box-shadow: 0 2px 8px #27344a05;
+}
+:root[data-theme="light"] .navigation {
+  box-shadow: none;
+}
+:root[data-theme="light"] .tab.active {
+  color: #242934;
+}
+:root[data-theme="light"] .section-label {
+  color: #414b5e;
+}
+:root[data-theme="light"] button.secondary {
+  background: #e7eaf0;
+  color: #374256;
+}
+:root[data-theme="light"] input[type="text"],
+:root[data-theme="light"] input[type="password"],
+:root[data-theme="light"] input[type="number"],
+:root[data-theme="light"] select {
+  background: #f9fafc;
+  color: #222c3b;
+  border-color: #cbd2de;
+}
+:root[data-theme="light"] input::placeholder {
+  color: #7b8493;
+}
+:root[data-theme="light"] th {
+  background: #eef1f6;
+  color: #5b6678;
+}
+:root[data-theme="light"] .track-title {
+  color: #232e40;
+}
+:root[data-theme="light"] .location {
+  color: #69778a;
+}
+:root[data-theme="light"] .column-current {
+  --column-accent: #6b778d;
+  background: #eef0f4;
+}
+:root[data-theme="light"] .column-api {
+  --column-accent: #3974b9;
+  background: #e8f1fd;
+}
+:root[data-theme="light"] .column-record {
+  --column-accent: #865cb0;
+  background: #f0eafa;
+}
+:root[data-theme="light"] .column-manual {
+  --column-accent: #946c23;
+  background: #faf1df;
+}
+:root[data-theme="light"] .column-final {
+  --column-accent: #2a7a55;
+  background: #e4f2e9;
+}
+:root[data-theme="light"] .source-value {
+  color: #3a465b;
+}
+:root[data-theme="light"] .source-value.active {
+  color: #19283c;
+  background: #fff;
+}
+:root[data-theme="light"] .source-value:hover:not(:disabled) {
+  background: #ffffffa8;
+}
+:root[data-theme="light"] .typed-value,
+:root[data-theme="light"] .typed-value.active {
+  background: #fff !important;
+  color: #293245 !important;
+}
+:root[data-theme="light"] .final-value,
+:root[data-theme="light"] .head.column-final {
+  color: #246440;
+}
+:root[data-theme="light"] .tagbox {
+  background: #f6f8fb;
+  border-color: #d6deea;
+}
+:root[data-theme="light"] .tagchip {
+  background: #fff;
+  border-color: #cdd5e2;
+  color: #3e4c62;
+}
+:root[data-theme="light"] .tagbox p[style*="color"] {
+  color: #80521f !important;
+}
+:root[data-theme="light"] .status {
+  background: #e6ebf5;
+  color: #526380;
+}
+:root[data-theme="light"] .status.ok,
+:root[data-theme="light"] .accepted {
+  background: #def0e5;
+  color: #266340;
+}
+:root[data-theme="light"] .status.bad,
+:root[data-theme="light"] .rejected {
+  background: #fbe5e9;
+  color: #a22f49;
+}
+:root[data-theme="light"] .pending {
+  background: #fff0d1;
+  color: #836220;
+}
+:root[data-theme="light"] .applied {
+  background: #deecfa;
+  color: #315f90;
+}
+:root[data-theme="light"] #connectionError {
+  color: #a22f49 !important;
+}
+:root[data-theme="light"] .danger {
+  background: #fae1e7 !important;
+  color: #9f2544 !important;
+}
+:root[data-theme="light"] #settingsButton {
+  background: white;
+  color: #374256;
+  border-color: #d5dce7;
+}
+:root[data-theme="light"] dialog {
+  background: #fff;
+  border-color: #cbd3df !important;
+}
+:root[data-theme="light"] dialog::backdrop {
+  background: #24314955;
+}
+:root[data-theme="light"] .help-tooltip {
+  background: #fff;
+  color: #344057;
+  border-color: #c8d1df;
+  box-shadow: 0 8px 25px #27334b25;
+}
+:root[data-theme="light"] .help-tooltip:after {
+  background: #fff;
+  border-color: #c8d1df;
+}
+:root[data-theme="light"] .info-button {
+  background: #66758d;
+  color: white;
+}
+:root[data-theme="light"] #debugLog {
+  color: #445b76;
+}
+.version-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.version-notice .help-wrap {
+  margin: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --canvas: #f1f3f7;
+    --panel: #fff;
+    --line: #d8dde6;
+    --text: #242934;
+    --muted: #626c7e;
+    --accent: #b92560;
+  }
+  :root:not([data-theme]) h1 span {
+    color: #626c7e;
+  }
+  :root:not([data-theme]) .card {
+    border-color: #dce1e9;
+    box-shadow: 0 2px 8px #27344a05;
+  }
+  :root:not([data-theme]) .navigation {
+    box-shadow: none;
+  }
+  :root:not([data-theme]) .tab.active {
+    color: #242934;
+  }
+  :root:not([data-theme]) .section-label {
+    color: #414b5e;
+  }
+  :root:not([data-theme]) button.secondary {
+    background: #e7eaf0;
+    color: #374256;
+  }
+  :root:not([data-theme]) input[type="text"],
+  :root:not([data-theme]) input[type="password"],
+  :root:not([data-theme]) input[type="number"],
+  :root:not([data-theme]) select {
+    background: #f9fafc;
+    color: #222c3b;
+    border-color: #cbd2de;
+  }
+  :root:not([data-theme]) input::placeholder {
+    color: #7b8493;
+  }
+  :root:not([data-theme]) th {
+    background: #eef1f6;
+    color: #5b6678;
+  }
+  :root:not([data-theme]) .track-title {
+    color: #232e40;
+  }
+  :root:not([data-theme]) .location {
+    color: #69778a;
+  }
+  :root:not([data-theme]) .column-current {
+    --column-accent: #6b778d;
+    background: #eef0f4;
+  }
+  :root:not([data-theme]) .column-api {
+    --column-accent: #3974b9;
+    background: #e8f1fd;
+  }
+  :root:not([data-theme]) .column-record {
+    --column-accent: #865cb0;
+    background: #f0eafa;
+  }
+  :root:not([data-theme]) .column-manual {
+    --column-accent: #946c23;
+    background: #faf1df;
+  }
+  :root:not([data-theme]) .column-final {
+    --column-accent: #2a7a55;
+    background: #e4f2e9;
+  }
+  :root:not([data-theme]) .source-value {
+    color: #3a465b;
+  }
+  :root:not([data-theme]) .source-value.active {
+    color: #19283c;
+    background: #fff;
+  }
+  :root:not([data-theme]) .source-value:hover:not(:disabled) {
+    background: #ffffffa8;
+  }
+  :root:not([data-theme]) .typed-value,
+  :root:not([data-theme]) .typed-value.active {
+    background: #fff !important;
+    color: #293245 !important;
+  }
+  :root:not([data-theme]) .final-value,
+  :root:not([data-theme]) .head.column-final {
+    color: #246440;
+  }
+  :root:not([data-theme]) .tagbox {
+    background: #f6f8fb;
+    border-color: #d6deea;
+  }
+  :root:not([data-theme]) .tagchip {
+    background: #fff;
+    border-color: #cdd5e2;
+    color: #3e4c62;
+  }
+  :root:not([data-theme]) .tagbox p[style*="color"] {
+    color: #80521f !important;
+  }
+  :root:not([data-theme]) .status {
+    background: #e6ebf5;
+    color: #526380;
+  }
+  :root:not([data-theme]) .status.ok,
+  :root:not([data-theme]) .accepted {
+    background: #def0e5;
+    color: #266340;
+  }
+  :root:not([data-theme]) .status.bad,
+  :root:not([data-theme]) .rejected {
+    background: #fbe5e9;
+    color: #a22f49;
+  }
+  :root:not([data-theme]) .pending {
+    background: #fff0d1;
+    color: #836220;
+  }
+  :root:not([data-theme]) .applied {
+    background: #deecfa;
+    color: #315f90;
+  }
+  :root:not([data-theme]) #connectionError {
+    color: #a22f49 !important;
+  }
+  :root:not([data-theme]) .danger {
+    background: #fae1e7 !important;
+    color: #9f2544 !important;
+  }
+  :root:not([data-theme]) #settingsButton {
+    background: white;
+    color: #374256;
+    border-color: #d5dce7;
+  }
+  :root:not([data-theme]) dialog {
+    background: #fff;
+    border-color: #cbd3df !important;
+  }
+  :root:not([data-theme]) dialog::backdrop {
+    background: #24314955;
+  }
+  :root:not([data-theme]) .help-tooltip {
+    background: #fff;
+    color: #344057;
+    border-color: #c8d1df;
+    box-shadow: 0 8px 25px #27334b25;
+  }
+  :root:not([data-theme]) .help-tooltip:after {
+    background: #fff;
+    border-color: #c8d1df;
+  }
+  :root:not([data-theme]) .info-button {
+    background: #66758d;
+    color: white;
+  }
+  :root:not([data-theme]) #debugLog {
+    color: #445b76;
+  }
+  .version-notice {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .version-notice .help-wrap {
+    margin: 0;
+  }
+}
+
+.settings-key-label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  line-height: 1.5;
+  padding-bottom: 3px;
+}
+.action-with-help {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+.action-with-help > .help-wrap {
+  margin: 0;
+}
+.action-with-help .help-tooltip {
+  left: auto;
+  right: 0;
+}
+.action-with-help .help-tooltip:after {
+  left: auto;
+  right: 6px;
+}
+.brand-disc {
+  background: transparent;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+.brand-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

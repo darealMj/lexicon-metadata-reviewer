@@ -4,7 +4,7 @@
 
 A local review tool for [Lexicon DJ](https://www.lexicondj.com/). Find metadata with TheAudioDB or SonoVault, compare it with your library, and choose exactly which values to keep before applying changes.
 
-Built with Python’s standard library and plain HTML/CSS/JavaScript. No npm install, Python packages, cloud hosting, or build step is required to run it. This is an independent project, not affiliated with Lexicon, TheAudioDB, SonoVault, or BPM Supreme.
+Built with Python’s standard library and HTML, CSS, and native JavaScript ES modules. No npm install, Python packages, cloud hosting, or build step is required to run it. This is an independent project, not affiliated with Lexicon, TheAudioDB, SonoVault, or BPM Supreme.
 
 ## Quick start
 
@@ -141,3 +141,20 @@ done
 Tests cover configuration creation/migration, secret handling, parser behavior, tag operations, themes, connection flow, cache behavior, and journal/restore safeguards. They do not write to your live Lexicon library.
 
 Contributions and forks are welcome. Include a clear reproduction and relevant test results with fixes. Never include `.env`, cache/history files, real keys, or private library data in commits or issues. See `.env.example` for public defaults. A project license should be selected before redistribution permissions are advertised beyond GitHub forking.
+
+## Source layout
+
+- `index.html`: page structure and dialogs.
+- `styles/base.css`, `styles/themes.css`: layout/components and appearance variants.
+- `js/app.js`: startup, event bindings, and the explicit bridge for inline row controls.
+- `js/state.js`, `js/dom.js`, `js/utils.js`: shared state, DOM references, and utilities.
+- `js/model.js`, `js/review.js`, `js/render.js`: review rules, user actions, and rendering.
+- `js/api.js`, `js/lexicon.js`, `js/metadata.js`: HTTP requests, library operations, and metadata providers.
+- `js/tags.js`, `js/csv.js`, `js/settings.js`, `js/history.js`: feature modules.
+- `server.py`: local HTTP service and provider cache/proxy.
+- `config_store.py`, `change_history.py`: private configuration and durable change history.
+- `tests/`: Python unit tests, JavaScript behavior regressions, and native ES-module integration tests.
+
+Modules use browser-native imports; no bundler is required. The server explicitly allows only public HTML, JavaScript, CSS, and logo paths. When adding a public asset, update that allowlist and its test. Never allow an entire directory of private application files.
+
+`node tests/modules.cjs` checks real ES-module linking, startup, UI handlers, and a mocked apply flow. It automatically enables Node’s experimental VM-module flag for this test only. Older behavior suites use the compatibility helper in `tests/helpers/frontend.cjs` to retain their existing mocks.

@@ -183,7 +183,29 @@ def saved_records():
 class Handler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
         path = unquote(urlparse(path).path)
-        return os.path.join(ROOT, 'index.html' if path in ('/', '/index.html') else '__blocked_path__')
+        if path == '/':
+            path = '/index.html'
+        public_files = {
+            '/index.html',
+            '/assets/logo.svg',
+            '/js/api.js',
+            '/js/app.js',
+            '/js/csv.js',
+            '/js/dom.js',
+            '/js/history.js',
+            '/js/lexicon.js',
+            '/js/metadata.js',
+            '/js/model.js',
+            '/js/render.js',
+            '/js/review.js',
+            '/js/settings.js',
+            '/js/state.js',
+            '/js/tags.js',
+            '/js/utils.js',
+            '/styles/base.css',
+            '/styles/themes.css',
+        }
+        return os.path.join(ROOT, path.lstrip('/') if path in public_files else '__blocked_path__')
 
     def send_json(self, data, status=200):
         self.send_response(status)

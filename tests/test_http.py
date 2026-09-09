@@ -19,4 +19,13 @@ class LocalWriteTests(unittest.TestCase):
   for path in ('/.env','/%2eenv','/.env.example','/config.json','/change-history.json','/metadata-cache.sqlite3','/config_store.py'):
    self.assertTrue(h.translate_path(path).endswith('__blocked_path__'))
 
+ def test_public_modules_and_styles_are_served(self):
+  root=pathlib.Path(__file__).parents[1]
+  h=object.__new__(module['Handler'])
+  for directory, pattern in [('js','*.js'),('styles','*.css')]:
+   for asset in (root/directory).glob(pattern):
+    self.assertEqual(h.translate_path('/'+directory+'/'+asset.name), str(asset))
+  for path in ('/js/../.env','/js/not-allowed.js','/styles/../../config.json'):
+   self.assertTrue(h.translate_path(path).endswith('__blocked_path__'))
+
 if __name__=='__main__':unittest.main()
