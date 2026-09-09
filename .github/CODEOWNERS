@@ -1,0 +1,4 @@
+# Every pull request requires the repository owner's review when
+# "Require review from Code Owners" is enabled in the main branch rule.
+# This also protects changes to this CODEOWNERS file.
+* @darealMJ
