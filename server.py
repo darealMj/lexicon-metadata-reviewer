@@ -13,6 +13,10 @@ import importlib.util
 _history_spec = importlib.util.spec_from_file_location('change_history', os.path.join(ROOT, 'change_history.py'))
 history = importlib.util.module_from_spec(_history_spec)
 _history_spec.loader.exec_module(history)
+import ai_tags
+import ai_tournament
+import ai_library
+AI_RUNS_FILE = os.path.join(ROOT, 'ai-evaluation-runs.json')
 HISTORY_FILE = os.path.join(ROOT, 'change-history.json')
 
 def lexicon_json(method, path, body=None):
@@ -186,7 +190,7 @@ class Handler(SimpleHTTPRequestHandler):
         if path == '/':
             path = '/index.html'
         public_files = {
-            '/index.html',
+            '/index.html', '/ai-lab.html', '/js/ai-lab.js', '/styles/ai-lab.css', '/evals/tag-benchmark.json',
             '/assets/logo.svg',
             '/js/api.js',
             '/js/app.js',
@@ -216,6 +220,9 @@ class Handler(SimpleHTTPRequestHandler):
     def metadata_request(self):
         parts = urlparse(self.path).path.strip('/').split('/')
         try:
+            if parts == ['metadata','ai']:
+                config = read_config()
+                return self.send_json({'base_url':config['ai_base_url'], 'model':config['ai_model'], 'model_2':config['ai_model_2'], 'model_3':config['ai_model_3'], 'max_tokens':config['ai_max_tokens'], 'web_search':config['ai_web_search'], 'key_configured':bool(config['ai_api_key']), 'runs':ai_tags.read_runs(AI_RUNS_FILE)})
             if parts == ['metadata','config']:
                 config = read_config()
                 return self.send_json({'config_storage':'env', 'audiodb_configured':bool(config['audiodb_api_key']), 'sonovault_configured':bool(config['sonovault_api_key']), **{key:config[key] for key in ('advanced_mode', 'overwrite_custom_tags', 'include_mix_tags_from_title', 'show_debug_log', 'theme')}})
@@ -315,6 +322,30 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         if not self.allow_local_write(): return
+        if self.path in ('/metadata/ai/config', '/metadata/ai/run', '/metadata/ai/preview', '/metadata/ai/tournament', '/metadata/ai/lookup'):
+            try:
+                length = int(self.headers.get('Content-Length', '0'))
+                if not 0 < length <= 65536: raise ValueError('Invalid AI request size')
+                body = json.loads(self.rfile.read(length))
+                if self.path.endswith('/lookup'):
+                    return self.send_json(ai_library.lookup(read_config(), body, lexicon_json('GET','/v1/tags'), cache_connection, HTTPS_CONTEXT))
+                if self.path.endswith('/preview'):
+                    return self.send_json(ai_tournament.preview(read_config(), body, HTTPS_CONTEXT))
+                if self.path.endswith('/tournament'):
+                    def select_winner(model, original):
+                        with config_store.LOCK:
+                            if read_config() == original: save_config({'ai_model':model, 'ai_model_2':'', 'ai_model_3':''})
+                    return self.send_json(ai_tournament.execute(body, read_config(), AI_RUNS_FILE, HTTPS_CONTEXT, select_winner))
+                if self.path.endswith('/config'):
+                    if not isinstance(body, dict) or any(k not in ('ai_api_key','ai_base_url','ai_model','ai_model_2','ai_model_3','ai_max_tokens','ai_web_search') for k in body):
+                        raise ValueError('Invalid AI settings')
+                    config_store.validate(body)
+                    ai_tags.endpoint(body.get('ai_base_url', read_config()['ai_base_url']))
+                    save_config(body)
+                    return self.send_json({'saved':True})
+                return self.send_json(ai_tags.run(read_config(), body, AI_RUNS_FILE, HTTPS_CONTEXT))
+            except (ValueError, OSError) as error:
+                return self.send_json({'error':str(error) if isinstance(error,ValueError) and not isinstance(error,json.JSONDecodeError) else 'AI operation failed. Check settings, dataset format, and local file permissions.'},400)
         if self.path in ('/metadata/config', '/metadata/cache/clear', '/metadata/history/restore'):
             host = self.headers.get('Host', '')
             if (host.split(':')[0] not in ('127.0.0.1', 'localhost') or
@@ -363,6 +394,8 @@ class Handler(SimpleHTTPRequestHandler):
                 data = json.loads(self.rfile.read(length))
                 if not isinstance(data, dict):
                     raise ValueError('Invalid track edit')
+                if data.get('aiReview'):
+                    ai_library.validate_apply(data.get('edits'), data['aiReview'], lexicon_json('GET','/v1/tags'))
                 return self.send_json(history.apply(HISTORY_FILE, data.get('id'), data.get('edits'), history_track, history_patch))
             except (ValueError, OSError) as error:
                 return self.send_json({'error':str(error) if isinstance(error,ValueError) else 'Write failed or outcome uncertain. Check change-history.json before retrying.'},409)

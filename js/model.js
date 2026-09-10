@@ -104,6 +104,11 @@ function initChoices(item) {
   item.tagMode ??= state.tagDefaults.tagMode;
   item.fields = {};
   FIELDS.forEach((f) => (item.fields[f] = canUse(item, f) ? "api" : "current"));
+  if(item.result?._ai){
+    item.genreTags=(item.result._aiTags || []).map(t=>({label:t.label,enabled:true}));
+    item.mainGenre=item.result.strGenre || val(item.original,'Genre');
+    return;
+  }
   item.genreTags = splitGenres(proposed(item.result, "Genre"));
   item.mainGenre =
     item.genreTags[0] ||
@@ -118,7 +123,7 @@ function finalValue(item, f) {
 function syncMainGenre(item) {
   const value = chosenValue(item, "Genre");
   item.mainGenre = ["api", "record"].includes(item.fields.Genre)
-    ? splitGenres(value)[0] || value || ""
+    ? ((item.fields.Genre === "record" ? item.reference : item.result)?._ai ? value : splitGenres(value)[0] || value || "")
     : value || "";
 }
 export {

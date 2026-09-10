@@ -172,3 +172,51 @@ Modules use browser-native imports; no bundler is required. The server explicitl
 Free for personal and professional use, including paid DJ work. You may modify, fork, and redistribute the app for free, retaining the license and copyright notices. **Selling the app or modified versions, charging for access, or bundling it into a paid software product requires written permission.**
 
 Licensed under the custom [Lexicon Metadata Reviewer Source-Available License](LICENSE). See the [licensing guide](docs/LICENSING.md) for examples. This is source-available software, not an OSI-approved open-source release.
+
+## AI tag lab (OpenRouter)
+
+Open **AI tag lab** in the header, or visit `/ai-lab.html`. This separate experiment page never updates Lexicon. Save your OpenRouter API key and an explicit model ID, then review the starter dataset and run an evaluation. Settings are kept in the private `.env` as `AI_API_KEY`, `AI_BASE_URL`, and `AI_MODEL`. Existing installations use defaults until you save these settings.
+
+Find current model IDs and prices at [OpenRouter models](https://openrouter.ai/models). You can select a free model when available; free quotas and availability may change. Prefer a fixed model ID for comparisons. Routing aliases may choose different models; each run records the resolved model returned by the provider. The compatible base URL can also be changed for local or other providers.
+
+`evals/tag-benchmark.json` contains seven editable starter examples, including mix versions and an unknown track. These labels are illustrative, not verified ground truth. Build a larger, representative dataset using your own reviewed genre, mood, and mix labels. Each row has a unique `id`, `artist`, `title`, and `expected_tags` array. Import/export JSON from the lab to reuse datasets. Only artist and title are sent to the provider; expected tags stay local. No audio or filenames are uploaded.
+
+Every run sends fresh requests, one per test (maximum 50), with no retry or fallback. It attempts every track even if earlier requests fail. Each failed track shows its error (such as HTTP status, timeout, truncated output, or invalid tag JSON). Raw provider error bodies are not displayed because they may contain credentials. Paid models can incur charges; the run button confirms the request count. Keep the page open while a run completes. Requests have a 45-second timeout per track.
+
+Results show precision, recall, F1, model-reported confidence, and Brier error for suggested tags. Matching ignores case and whitespace but does not equate genre synonyms. Missing expected tags reduce recall; additional tags reduce precision. The summary F1 averages over the entire dataset, counting failed/unattempted cases as zero. Empty predictions on empty expected labels count as correct abstention. Brier error only measures suggested tags, so it must be considered alongside recall. These metrics measure agreement with your labels, not objective musical truth.
+
+The last 50 runs are saved privately in `ai-evaluation-runs.json` (gitignored), separate from the metadata cache. Clearing the metadata cache does not delete evaluations. Export runs for long-term comparisons; exports include the dataset, prompt/version, dataset hash, requested and returned model IDs, usage if supplied, timing, errors, and scores. Compare the same dataset hash and prompt version over time. Model confidence is self-reported and should not be treated as calibrated reliability. No live provider calls are made by the automated tests.
+
+The Capleton “Good in Her Clothes” case uses user-supplied expected albums `Hotta Fire` or `Hotta Fire Riddim` and release year `1999`. Optional `expected_albums` lists acceptable aliases; `expected_year` checks the year only. These checks are shown separately from tag F1. `expected_tags: null` skips tag scoring when no reference tags have been provided (unlike `[]`, which expects abstention). Album/year expectations are never sent to the model. Prompt `tags-v2` requests album/year alongside tags; compare runs with the same prompt version.
+
+AI lab **Max response tokens** defaults to 4,096 and can be set from 256 to 32,768 (`AI_MAX_TOKENS` in `.env`). Existing configurations without the setting use 4,096 automatically. Each saved run records its token limit. Increase it if a model truncates its JSON; provider model limits still apply. No automatic retries are performed.
+
+### Web-backed evaluations
+
+AI lab now defaults to **Search the web**, using OpenRouter's web-search server tool with Exa and a three-result total cap per track. Search has additional charges, including with free models. Switch it off to compare memory-only responses. The model is instructed to retrieve evidence first, but may not use the tool: results without provider URL citations explicitly say grounding is unverified. Sources are clickable; model-supplied URLs are labeled unverified and do not prove a search occurred. A citation does not by itself verify every returned field. No paid requests run automatically.
+
+Use optional `tag_aliases` to map a canonical label to alternative spellings, e.g. `"tag_aliases": {"R&B": ["Rhythm and Blues", "R and B"]}`. `acceptable_tags` lists optional approved extras: these are not required for recall and do not reduce precision. Extras outside the reference are labeled unreviewed, not automatically false; review sources and add acceptable ones to your dataset. Starter expectations remain illustrative. All expectations stay out of the model prompt. Runs record web mode and scoring version; comparisons require matching settings and dataset.
+
+### Comparing up to three models
+
+Set Model 1 and optionally Model 2/3 in the lab, then save settings. Each nonempty, unique model runs against the same dataset and prompt settings, sequentially with no retries; seven tracks with three models means 21 requests. Each model searches independently when web search is enabled, so search charges repeat and retrieved evidence may differ. The confirmation shows the request count before running.
+
+Saved evaluations show per-model scores, a side-by-side per-track table, and text-based agreement counts (not a truth/confidence score). Errors never vote. Full confidence, sources, album/year checks, usage, and errors remain available in the detailed rows/export. Optional slots persist as `AI_MODEL_2` and `AI_MODEL_3` in private `.env`. Older single-model runs remain readable.
+
+### Random model discovery
+
+In **Discover a better model**, set a model count (1–3), input/output price ceiling per million tokens, and a key-credit budget. **Preview random models** fetches the current OpenRouter catalog, filters for text output, context/output capacity and tool support when search is on, and randomly samples unique models. Eligible Model 1 is included as the incumbent baseline. Router aliases are excluded. Preview captures dataset and settings for 15 minutes; it does not query models. Confirm **Run selected models** to start paid evaluation.
+
+Use a dedicated OpenRouter API key with a non-resetting credit limit and remaining credit at or below the chosen budget, with BYOK included in the limit. The app verifies this before random runs. Provider key enforcement bounds charges; catalog prices alone cannot guarantee a total because search and provider routing affect cost. This workflow does not change or create your OpenRouter keys. Standard manual runs retain their existing behavior.
+
+Leaderboard quality averages available tag F1, album correctness and year correctness per track. Failed predictions score zero. Artist groups stay together in a deterministic training/holdout split to keep song versions together. Ranking uses training score, then failures, reported cost (unknown last), and speed. Holdout does not choose the top model; it checks that training winner. Reported cost is unavailable when any request lacks cost data.
+
+Automatic selection requires the reviewed-dataset checkbox, at least 20 tracks / 5 artists with 15 training and 5 holdout tracks, zero winner failures, at least 80% on both splits, and a tested incumbent. A challenger must beat the incumbent by at least five percentage points on each split. Otherwise the winner is provisional and settings stay unchanged. A qualified winner becomes Model 1 and clears optional comparison slots, unless settings changed during the run. With only seven starter tracks you get a leaderboard, not automatic promotion. Selection is for future AI lab runs; the main library metadata workflow is unchanged. Benchmark history saves the sampled candidates, prices, split IDs, leaderboard and selection eligibility.
+
+### AI in the main reviewer
+
+Choose **AI / OpenRouter (Model 1 from AI lab)** in Metadata source, then **Lookup metadata**. Set the key/model/web-search preference in AI tag lab first. Normal lookup uses only Model 1, not all comparison slots. The confirmation explains provider charges and that artist/title plus the allowed custom-tag taxonomy are sent to the provider. Results appear in API Match for per-field selection, with sources, self-reported tag confidence and warnings. AI suggestions require individual acceptance and are excluded from bulk acceptance without warnings. Apply and Restore use the existing history workflow.
+
+The backend reads Lexicon's **Genre custom-tag category**, never the track Genre-field inventory, to constrain main genre. Subgenre, Mood and Mix suggestions must match existing labels in their own categories. Unknown suggestions are discarded and reported; an unresolved main genre retains the current value. Existing compound genre labels such as R&B/Soul/Funk stay intact. Typed values remain manual user choices. Before applying AI selections, current tag membership is checked; AI tags are reused by ID rather than created in a different category.
+
+Only album, year, main genre and custom tags are currently supplied by AI. Title, artist, label and track number retain their current values. Lookup results are cached privately in the existing metadata SQLite cache, keyed by artist/title, model, endpoint, token limit, web setting, taxonomy and integration version. **Clear cache** in Settings also clears AI lookups. Lab evaluations continue to bypass this cache. No AI changes are automatically applied to Lexicon.

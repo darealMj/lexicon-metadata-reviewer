@@ -10,7 +10,7 @@ import {
   versionProtected,
 } from "./model.js";
 import { detectedMixTags, effectiveTags } from "./tags.js";
-import { recordHTML } from "./metadata.js";
+import { recordHTML, aiEvidence } from "./metadata.js";
 import { state } from "./state.js";
 import {
   $,
@@ -43,7 +43,7 @@ function tagHTML(item) {
   return `<div class="tagbox"><div><b>Main Genre:</b> <span id="main-genre-${item.id}">${esc(finalValue(item, "Genre") || "—")}</span> <span class="muted">Always included in custom tags</span></div><div class="row" style="margin-top:8px"><label title="Off adds checked tags to existing tags. On replaces the complete custom tag list."><input type="checkbox" role="switch" aria-label="Overwrite custom tags for track ${item.id}" ${item.tagMode === "replace" ? "checked" : ""} onchange="setTagMode(${item.id},this.checked?'replace':'add')"> Overwrite custom tags</label><label title="When overwriting, also include version markers found in this song's original title."><input type="checkbox" role="switch" aria-label="Include Mix tags from title for track ${item.id}" ${item.includeMix !== false ? "checked" : ""} ${item.tagMode !== "replace" ? "disabled" : ""} onchange="setIncludeMix(${item.id},this.checked)"> Include Mix tags from title</label></div><div class="small muted" style="margin-top:8px">Mix tags detected: ${detectedMixTags(item).map(esc).join(", ") || "None"}</div>${item.tagMode === "replace" ? `<p id="tag-preview-${item.id}" style="color:#b42318">${effectiveTags(item).length ? "Only these custom tags will remain: " + effectiveTags(item).map(esc).join(", ") : "No tags selected: all custom tags will be cleared."}</p>` : ""}<div class="tagrow"><b class="small">Custom Genre Tags:</b><button class="secondary" onclick="allGenreTags(${item.id},true)">Select all</button><button class="secondary" onclick="allGenreTags(${item.id},false)">Clear all</button>${chips || '<span class="muted">No genre tags parsed</span>'}</div><div class="row" style="margin-top:7px"><input id="extra-${item.id}" type="text" placeholder="Add tag, e.g. Rap"><button class="secondary" onclick="addGenreTag(${item.id})">Add tag</button></div></div>`;
 }
 function reviewHTML(item) {
-  const picker = recordHTML(item),
+  const picker = recordHTML(item) + aiEvidence(item.result) + aiEvidence(item.reference),
     showRecord = state.advanced && !!item.reference;
   if (!hasProposal(item) && !state.advanced)
     return (
@@ -76,7 +76,7 @@ function reviewHTML(item) {
     h +
     "</div>" +
     (item.result
-      ? `<p class="muted">API text match score: ${Math.round((item.result._score || 0) * 100)}/100 — artist/title similarity, not verified identification.</p>`
+      ? item.result._ai ? "" : `<p class="muted">API text match score: ${Math.round((item.result._score || 0) * 100)}/100 — artist/title similarity, not verified identification.</p>`
       : "") +
     (versionProtected(item)
       ? `<span class="version-notice muted">Version title protected <span class="help-wrap"><button type="button" class="info-button" aria-label="Why this title is protected" aria-describedby="version-help-${item.id}">i</button><span id="version-help-${item.id}" class="help-tooltip" role="tooltip">A version word such as Clean, Extended, Remix, or Instrumental was found in this track’s title, file path, mix, or remixer. The original title is kept so a generic metadata title cannot remove that detail. Title selection and typing are disabled; other fields can still be edited. This is a text check, not audio identification.</span></span></span>`
