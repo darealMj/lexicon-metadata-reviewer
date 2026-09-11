@@ -1,0 +1,99 @@
+[
+  {
+    "id": "beyonce-original",
+    "artist": "Beyoncé",
+    "title": "Crazy in Love",
+    "expected_tags": [
+      "R&B"
+    ],
+    "acceptable_tags": [
+      "Pop",
+      "Hip Hop"
+    ],
+    "tag_aliases": {
+      "R&B": [
+        "Rhythm and Blues",
+        "R and B"
+      ],
+      "Hip Hop": [
+        "Hip-Hop",
+        "HipHop"
+      ]
+    },
+    "expected_albums": [
+      "Dangerously in Love"
+    ],
+    "expected_year": 2003
+  },
+  {
+    "id": "beyonce-instrumental",
+    "artist": "Beyoncé",
+    "title": "Crazy in Love (Instrumental)",
+    "expected_tags": [
+      "R&B",
+      "Instrumental"
+    ],
+    "acceptable_tags": [],
+    "tag_aliases": {
+      "R&B": [
+        "Rhythm and Blues",
+        "R and B"
+      ]
+    }
+  },
+  {
+    "id": "beyonce-clean",
+    "artist": "Beyoncé",
+    "title": "Crazy in Love (Clean Extended)",
+    "expected_tags": [
+      "R&B",
+      "Clean",
+      "Extended"
+    ],
+    "acceptable_tags": [],
+    "tag_aliases": {
+      "R&B": [
+        "Rhythm and Blues",
+        "R and B"
+      ]
+    }
+  },
+  {
+    "id": "daft-punk",
+    "artist": "Daft Punk",
+    "title": "One More Time",
+    "expected_tags": [
+      "House"
+    ],
+    "acceptable_tags": [],
+    "expected_year": 2000
+  },
+  {
+    "id": "bob-marley",
+    "artist": "Bob Marley & The Wailers",
+    "title": "Three Little Birds",
+    "expected_tags": [
+      "Reggae"
+    ],
+    "acceptable_tags": []
+  },
+  {
+    "id": "unknown",
+    "artist": "Unknown Artist",
+    "title": "Unreleased Demo 9472",
+    "expected_tags": [],
+    "acceptable_tags": []
+  },
+  {
+    "id": "capleton-good-in-her-clothes",
+    "artist": "Capleton",
+    "title": "Good in Her Clothes",
+    "expected_tags": null,
+    "expected_albums": [
+      "Hotta Fire",
+      "Hotta Fire Riddim"
+    ],
+    "expected_year": 1999,
+    "acceptable_tags": []
+  }
+]

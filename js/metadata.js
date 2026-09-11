@@ -43,7 +43,7 @@ function attachRecord(item, record) {
   item.recordError = "";
   item.decision = "pending";
   FIELDS.forEach((f) => (item.fields[f] = "current"));
-  item.genreTags = splitGenres(proposed(record, "Genre")).map((label) => ({
+  item.genreTags = (record._ai ? (record._aiTags || []).map(t=>t.label) : splitGenres(proposed(record, "Genre"))).map((label) => ({
     label,
     enabled: false,
   }));
@@ -204,6 +204,19 @@ function commonResult(source, c, artist, title) {
   });
   return registerRecord(r, "sonovault", c.id ?? c.track_id ?? c.trackId);
 }
+async function lookupAI(artist, title) {
+  const response=await fetch('/metadata/ai/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({artist,title})});
+  const data=await response.json();if(!response.ok)throw new Error(data.error || 'AI lookup failed');
+  const r=data.result;
+  return registerRecord({strTrack:'',strArtist:'',strAlbum:r.album || '',strGenre:r.main_genre || '',intYearReleased:r.year || '',intTrackNumber:'',strLabel:'',
+    _source:'AI / '+(r.resolved_model || r.model),_score:0,_ai:true,_cached:data.cached,_aiTags:r.categorized_tags,_warnings:r.warnings,
+    _links:r.sources || [],_sources:{},_raw:r},'ai',data.id);
+}
+function aiEvidence(result) {
+  if(!result?._ai)return '';
+  const links=(result._links || []).filter(s=>/^https?:\/\//i.test(s.url)).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title || s.url)} (${esc(s.origin)})</a>`).join(' · ');
+  return `<div class="tagbox"><b>AI suggestion · ${result._cached?'cached':'fresh'}</b><p>Review each field before accepting. Sources do not verify every suggestion.</p>${(result._warnings || []).map(w=>`<p>${esc(w)}</p>`).join('')}${links || '<p>No source links returned.</p>'}<p>${(result._aiTags || []).map(t=>`${esc(t.category)}: ${esc(t.label)} (${Math.round(t.confidence*100)}% self-reported)`).join(' · ')}</p></div>`;
+}
 async function lookupAudioDB(artist, title) {
   const { payload: d } = await localMetadata(
     "audiodb/search?" +
@@ -266,7 +279,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
     return;
   }
   const get = async (src) =>
-    src === "audiodb"
+    src === "ai" ? lookupAI(artist,title) : src === "audiodb"
       ? lookupAudioDB(artist, title, audioKey)
       : lookupSonovault(artist, title, svKey);
   const pair = mode.split("-");
@@ -299,7 +312,8 @@ async function metadataLookup(item, audioKey, svKey, mode) {
       return;
     }
     item.result = result;
-    if ((result._score || 0) < 0.55) item.error = "Low-confidence result";
+    if (result._ai) item.error = "AI suggestion requires individual review";
+    else if ((result._score || 0) < 0.55) item.error = "Low-confidence result";
     initChoices(item);
   } catch (e) {
     item.error = "API error: " + e.message;
@@ -307,6 +321,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
 }
 async function lookupAll() {
   if (state.busy) return;
+  if(metadataSource.value==='ai' && !confirm(`Look up ${state.rows.filter(r=>!r.applied).length} tracks using Model 1 from AI lab? Uncached tracks incur model/search charges. Artist, title, and the allowed custom-tag taxonomy are sent to the provider.`))return;
   setBusy(true);
   const akey = "",
     svkey = "",
@@ -331,6 +346,8 @@ async function lookupAll() {
   }
 }
 export {
+  lookupAI,
+  aiEvidence,
   registerRecord,
   recordLabel,
   recordHTML,

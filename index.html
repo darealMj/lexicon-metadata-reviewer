@@ -36,6 +36,7 @@
             <h1>Lexicon <span>Metadata Reviewer</span></h1>
           </div>
         </div>
+        <a class="secondary" href="/ai-lab.html">AI tag lab</a>
         <button class="secondary" onclick="openHistory()">Change history</button
         ><button
           id="settingsButton"
@@ -121,6 +122,7 @@
           <label
             >Metadata source
             <select id="metadataSource">
+              <option value="ai">AI / OpenRouter (Model 1 from AI lab)</option>
               <option value="audiodb">TheAudioDB only</option>
               <option value="sonovault">Sonovault only</option>
               <option value="audiodb-sonovault" selected>TheAudioDB → Sonovault fallback</option>

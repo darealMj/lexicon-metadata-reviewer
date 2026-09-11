@@ -169,13 +169,14 @@ async function searchLexicon() {
       status.textContent = "No Lexicon tracks matched";
   }
 }
-async function patchTrack(id, patch) {
+async function patchTrack(id, patch, aiReview = null) {
   if (!validLexiconId(id)) throw new Error("Track has no valid Lexicon ID");
   return api("/v1/track", {
     method: "PATCH",
     body: JSON.stringify({
       id: Number(id),
       edits: patch,
+      ...(aiReview ? {aiReview} : {}),
     }),
   });
 }
@@ -213,6 +214,9 @@ async function applyOne(item) {
   for (const field of ["year", "trackNumber"])
     if (field in patch && (!Number.isInteger(patch[field]) || patch[field] < 0))
       throw new Error("Invalid numeric value for " + field);
+  const aiSource=item.fields.Genre === 'record' ? item.reference : item.result;
+  const aiReview={genre:!!(aiSource?._ai && ['api','record'].includes(item.fields.Genre)),tags:[]};
+  const aiTags=[...(item.result?._aiTags || []),...(item.reference?._aiTags || [])];
   const wanted = effectiveTags(item);
   if (wanted.length || item.tagMode === "replace") {
     // Read the latest tags to avoid replacing tags added since this page loaded.
@@ -231,6 +235,12 @@ async function applyOne(item) {
       );
     const ids = [];
     for (const label of wanted) {
+      const suggested=aiTags.find(t=>t.label===label);
+      if(suggested){
+        const existing=state.allTags.find(t=>String(t.id)===String(suggested.id) && t.label===suggested.label && String(t.categoryId)===String(suggested.categoryId));
+        if(!existing)throw new Error('An AI tag was removed or moved in Lexicon. Run lookup again before applying.');
+        ids.push(Number(existing.id));aiReview.tags.push({id:existing.id,categoryId:existing.categoryId,label:existing.label});continue;
+      }
       const categoryId =
         includedMixTags(item).includes(label) && !findExistingTag(label)
           ? (await ensureCategory("Mix")).id
@@ -245,7 +255,7 @@ async function applyOne(item) {
       ),
     ];
   }
-  if (Object.keys(patch).length) await patchTrack(item.lexiconId, patch);
+  if (Object.keys(patch).length) await patchTrack(item.lexiconId, patch, aiReview.genre || aiReview.tags.length ? aiReview : null);
   item.applied = true;
   if (item.error?.startsWith("Lexicon write failed:")) item.error = null;
 }
