@@ -12,7 +12,7 @@
     />
     <link rel="stylesheet" href="/styles/base.css" />
     <link rel="stylesheet" href="/styles/themes.css" />
-  </head>
+  <link rel="stylesheet" href="/styles/model-pricing.css"></head>
   <body>
     <div class="wrap">
       <header class="row app-header" style="justify-content: space-between">
@@ -123,7 +123,7 @@
             >Metadata source
             <select id="metadataSource">
               <option value="ai">AI / OpenRouter (Model 1 from AI lab)</option>
-              <option value="audiodb">TheAudioDB only</option>
+              <option value="discogs">Discogs</option><option value="audiodb">TheAudioDB only</option>
               <option value="sonovault">Sonovault only</option>
               <option value="audiodb-sonovault" selected>TheAudioDB → Sonovault fallback</option>
               <option value="sonovault-audiodb">Sonovault → TheAudioDB fallback</option>
@@ -235,7 +235,8 @@
               autocomplete="new-password"
               placeholder="Leave blank to keep saved key"
               style="display: block; width: 100%" /></label
-          ><label class="settings-key-label"
+          ><label class="settings-key-label">Discogs personal access token<input style="display:block;width:100%" id="settingsDiscogs" type="password" autocomplete="new-password" placeholder="Enter token"></label>
+          <label class="settings-key-label"
             >TheAudioDB API key<input
               id="settingsAudio"
               type="password"
@@ -292,5 +293,5 @@
       </form>
     </dialog>
     <script type="module" src="/js/app.js"></script>
-  </body>
+  <script type="module" src="/js/model-pricing.js"></script></body>
 </html>
