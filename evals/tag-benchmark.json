@@ -4,11 +4,13 @@
     "artist": "Beyoncé",
     "title": "Crazy in Love",
     "expected_tags": [
-      "R&B"
+      "R&B",
+      "Hip Hop",
+      "Pop"
     ],
     "acceptable_tags": [
-      "Pop",
-      "Hip Hop"
+      "Soul",
+      "Funk"
     ],
     "tag_aliases": {
       "R&B": [
@@ -18,6 +20,10 @@
       "Hip Hop": [
         "Hip-Hop",
         "HipHop"
+      ],
+      "Soul": [
+        "1970s Soul",
+        "70s Soul"
       ]
     },
     "expected_albums": [
@@ -95,5 +101,44 @@
     ],
     "expected_year": 1999,
     "acceptable_tags": []
+  },
+  {
+    "id": "lizzo-about-damn-time-super-clean",
+    "artist": "Lizzo",
+    "title": "About Damn Time (Super Clean)",
+    "expected_tags": [
+      "R&B",
+      "Soul",
+      "Funk",
+      "Post-disco"
+    ],
+    "acceptable_tags": [],
+    "tag_aliases": {
+      "R&B": [
+        "Rhythm and Blues",
+        "R and B"
+      ],
+      "Post-disco": [
+        "Post Disco"
+      ]
+    },
+    "expected_albums": [
+      "Special"
+    ],
+    "expected_year": 2022
+  },
+  {
+    "id": "wayne-wonder-keep-them-coming",
+    "artist": "Wayne Wonder",
+    "title": "Keep Them Coming",
+    "expected_tags": [
+      "Dancehall"
+    ],
+    "acceptable_tags": [],
+    "expected_albums": [
+      "Bug Riddim",
+      "Bug"
+    ],
+    "expected_year": 1999
   }
 ]
