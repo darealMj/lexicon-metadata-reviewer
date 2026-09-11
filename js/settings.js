@@ -24,6 +24,7 @@ async function openSettings() {
   $("#settingsSave").disabled = true;
   $("#settingsSono").value = "";
   $("#settingsAudio").value = "";
+  $("#settingsDiscogs").value = "";
   dialog.showModal();
   try {
     const c = await localMetadata("config");
@@ -37,6 +38,7 @@ async function openSettings() {
     $("#settingsAudio").placeholder = c.audiodb_configured
       ? "********"
       : "Enter API key";
+    $("#settingsDiscogs").placeholder = c.discogs_configured ? "********" : "Enter token";
     $("#settingsTheme").value = c.theme || "system";
     $("#settingsDebug").checked = c.show_debug_log === true;
     $("#settingsAdvanced").checked = c.advanced_mode === true;
@@ -92,6 +94,7 @@ async function saveSettings() {
   for (const [id, key] of [
     ["settingsSono", "sonovault_api_key"],
     ["settingsAudio", "audiodb_api_key"],
+    ["settingsDiscogs", "discogs_api_key"],
   ]) {
     const value = $("#" + id).value.trim();
     if (value) changes[key] = value;
@@ -107,6 +110,7 @@ async function saveSettings() {
           "Include Mix tags from title: " +
             (changes.include_mix_tags_from_title ? "On" : "Off"),
           "Show debug log: " + (changes.show_debug_log ? "On" : "Off"),
+          ...(changes.discogs_api_key ? ["Replace Discogs token"] : []),
           ...(changes.sonovault_api_key ? ["Replace SonoVault API key"] : []),
           ...(changes.audiodb_api_key ? ["Replace TheAudioDB API key"] : []),
         ].join("\n"),
@@ -136,6 +140,7 @@ async function saveSettings() {
       : "Add your SonoVault key in Settings";
     $("#settingsSono").value = "";
     $("#settingsAudio").value = "";
+  $("#settingsDiscogs").value = "";
     $("#settingsDialog").close();
   } catch (e) {
     $("#settingsMessage").textContent = e.message;

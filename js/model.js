@@ -105,6 +105,8 @@ function initChoices(item) {
   item.fields = {};
   FIELDS.forEach((f) => (item.fields[f] = canUse(item, f) ? "api" : "current"));
   if(item.result?._ai){
+    item.fields.Title='current';
+    item.fields.Artist='current';
     item.genreTags=(item.result._aiTags || []).map(t=>({label:t.label,enabled:true}));
     item.mainGenre=item.result.strGenre || val(item.original,'Genre');
     return;

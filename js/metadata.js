@@ -20,18 +20,22 @@ function registerRecord(result, provider, id) {
 function recordLabel(r) {
   return `${r._source} · ID ${r._recordId || "not supplied"} · ${r.strArtist || "Unknown artist"} — ${r.strTrack || "Untitled"}${r.strAlbum ? " · " + r.strAlbum : ""}`;
 }
+function discogsChoices(item) {
+  if(!item.discogsCandidates?.length)return '';
+  return `<div class="tagbox"><label>Discogs release <select onchange="chooseDiscogs(${item.id},this.value)">${item.discogsCandidates.map(c=>`<option value="${esc(String(c.id))}" ${String(c.id)===item.result?._recordId?'selected':''}>${esc(c.title)} · ${esc(String(c.year || 'Year unknown'))} · ${esc(c.country || '')} · ${esc((c.format || []).join(', '))} · ID ${esc(String(c.id))}</option>`).join('')}</select></label><p>Release year may describe a reissue. Review the source before applying.</p></div>`;
+}
 function recordHTML(item) {
   if (!state.advanced)
-    return item.result
+    return discogsChoices(item) + (item.result
       ? `<p class="muted">API match: ${esc(recordLabel(item.result))}</p>`
-      : "";
+      : "");
   const options = [...state.sourceRecords.entries()]
     .map(
       ([key, r]) =>
         `<option value="${esc(key)}">${esc(recordLabel(r))}</option>`,
     )
     .join("");
-  return `<div class="tagbox"><b>Use metadata from a source record</b>${item.result ? `<p class="muted">API match: ${esc(recordLabel(item.result))}</p>` : ""}${item.reference ? `<p class="muted">Selected record: ${esc(recordLabel(item.reference))}</p>` : ""}
+  return discogsChoices(item) + `<div class="tagbox"><b>Use metadata from a source record</b>${item.result ? `<p class="muted">API match: ${esc(recordLabel(item.result))}</p>` : ""}${item.reference ? `<p class="muted">Selected record: ${esc(recordLabel(item.reference))}</p>` : ""}
  <div class="row"><label>Saved source records <select id="record-choice-${item.id}" aria-label="Source record for track ${item.id}" style="max-width:420px"><option value="">Choose a found record…</option>${options}</select></label><button class="secondary" onclick="useFoundRecord(${item.id})" ${!options ? "disabled" : ""}>Use selected record</button></div>
  <details style="margin-top:8px"><summary>Enter a source track ID</summary><div class="row" style="margin-top:8px"><select id="record-provider-${item.id}" aria-label="Record provider for track ${item.id}"><option value="audiodb">TheAudioDB</option><option value="sonovault">SonoVault</option></select><input id="record-id-${item.id}" type="text" placeholder="Provider track ID" aria-label="Record ID for track ${item.id}"><button class="secondary" onclick="loadRecordById(${item.id})">Load record by ID</button></div></details>
  ${item.reference ? `<p class="muted">Click values in Selected record to reuse individual fields. This does not identify or approve this local version.</p><button class="secondary" onclick="clearRecord(${item.id})">Remove selected record</button>` : ""}
@@ -204,18 +208,40 @@ function commonResult(source, c, artist, title) {
   });
   return registerRecord(r, "sonovault", c.id ?? c.track_id ?? c.trackId);
 }
+async function discogsRecord(item,id) {
+  const r=await localMetadata('discogs/record?'+new URLSearchParams({id,artist:val(item.original,'Artist'),title:val(item.original,'Title')}));
+  return registerRecord({strTrack:r.title || '',strArtist:(r.artists || []).join(', '),strAlbum:r.album || '',strGenre:r.main_genre || '',intYearReleased:r.year || '',strLabel:r.label || '',
+    _source:'Discogs',_score:0,_ai:true,_discogs:true,_aiTags:r.categorized_tags,_warnings:r.warnings,_links:r.sources,_raw:r},'discogs',id);
+}
+async function lookupDiscogs(item) {
+  const data=await localMetadata('discogs/search?'+new URLSearchParams({artist:val(item.original,'Artist'),title:val(item.original,'Title')}));
+  item.discogsCandidates=(data.results || []).filter(c=>c.type==='release' && Number.isInteger(c.id));
+  return item.discogsCandidates.length ? discogsRecord(item,String(item.discogsCandidates[0].id)) : null;
+}
+window.chooseDiscogs=async(id,releaseId)=>{
+  const item=editable(id);if(!item || !item.discogsCandidates?.some(c=>String(c.id)===releaseId))return;
+  setBusy(true);
+  try {const result=await discogsRecord(item,releaseId);item.result=result;item.reference=null;item.manual={};initChoices(item);item.error='Discogs release requires individual review';invalidate(item);}
+  catch(e){item.error=e.message;}
+  finally{setBusy(false);render();controls();}
+};
 async function lookupAI(artist, title) {
   const response=await fetch('/metadata/ai/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({artist,title})});
   const data=await response.json();if(!response.ok)throw new Error(data.error || 'AI lookup failed');
   const r=data.result;
-  return registerRecord({strTrack:'',strArtist:'',strAlbum:r.album || '',strGenre:r.main_genre || '',intYearReleased:r.year || '',intTrackNumber:'',strLabel:'',
+  return registerRecord({strTrack:r.title || '',strArtist:(r.artists || []).join(', '),strAlbum:r.album || '',strGenre:r.main_genre || '',intYearReleased:r.year || '',intTrackNumber:'',strLabel:r.label || '',
     _source:'AI / '+(r.resolved_model || r.model),_score:0,_ai:true,_cached:data.cached,_aiTags:r.categorized_tags,_warnings:r.warnings,
     _links:r.sources || [],_sources:{},_raw:r},'ai',data.id);
 }
 function aiEvidence(result) {
   if(!result?._ai)return '';
+  if(result._discogs)return `<div class="tagbox"><b>Discogs release metadata</b><p>Genres: ${esc((result._raw.genres || []).join(', ') || 'None supplied')} · Styles: ${esc((result._raw.styles || []).join(', ') || 'None supplied')}</p>${(result._warnings || []).map(w=>`<p>${esc(w)}</p>`).join('')}<a href="https://www.discogs.com/release/${esc(result._recordId)}" target="_blank" rel="noopener noreferrer">View release on Discogs</a></div>`;
+  const cost=result._raw?.usage?.cost;
+  const costHTML=typeof cost==='number' && Number.isFinite(cost) && cost>=0 ? `<span class="ai-price-pill">${result._cached?'Original lookup':'Reported lookup'}: $${cost.toFixed(6)}</span>` : '';
+  const wiki=result._raw?.wikipedia;
+  const wikiHTML=wiki?.status==='matched' ? `<div><b>Wikipedia source evidence</b><p><a href="${esc(wiki.url)}" target="_blank" rel="noopener noreferrer">${esc(wiki.title)}</a> · Revision ${esc(String(wiki.revision_id || 'unknown'))} · Retrieved ${esc(wiki.retrieved_at)}</p>${Object.entries(wiki.fields).map(([k,v])=>`<p>${esc(k)}: ${esc(v)}</p>`).join('')}<p>AI mapping: ${esc(wiki.fields.genre || 'No source genre')} → ${esc(result.strGenre || 'Unresolved main genre')}</p></div>` : '';
   const links=(result._links || []).filter(s=>/^https?:\/\//i.test(s.url)).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title || s.url)} (${esc(s.origin)})</a>`).join(' · ');
-  return `<div class="tagbox"><b>AI suggestion · ${result._cached?'cached':'fresh'}</b><p>Review each field before accepting. Sources do not verify every suggestion.</p>${(result._warnings || []).map(w=>`<p>${esc(w)}</p>`).join('')}${links || '<p>No source links returned.</p>'}<p>${(result._aiTags || []).map(t=>`${esc(t.category)}: ${esc(t.label)} (${Math.round(t.confidence*100)}% self-reported)`).join(' · ')}</p></div>`;
+  return `<div class="tagbox">${costHTML}<b>AI suggestion · ${result._cached?'cached':'fresh'}</b><p>Review each field before accepting. Sources do not verify every suggestion.</p>${(result._warnings || []).map(w=>`<p>${esc(w)}</p>`).join('')}${wikiHTML}${links || '<p>No additional source links returned.</p>'}<p>${(result._aiTags || []).map(t=>`${esc(t.category)}: ${esc(t.label)} (${Math.round(t.confidence*100)}% self-reported)`).join(' · ')}</p></div>`;
 }
 async function lookupAudioDB(artist, title) {
   const { payload: d } = await localMetadata(
@@ -269,6 +295,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
     title = val(item.original, "Title");
   item.result = null;
   item.error = null;
+  item.discogsCandidates = [];
   item.tagMode ??= state.tagDefaults.tagMode;
   item.decision = "pending";
   item.fields = {};
@@ -279,7 +306,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
     return;
   }
   const get = async (src) =>
-    src === "ai" ? lookupAI(artist,title) : src === "audiodb"
+    src === "discogs" ? lookupDiscogs(item) : src === "ai" ? lookupAI(artist,title) : src === "audiodb"
       ? lookupAudioDB(artist, title, audioKey)
       : lookupSonovault(artist, title, svKey);
   const pair = mode.split("-");
@@ -312,7 +339,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
       return;
     }
     item.result = result;
-    if (result._ai) item.error = "AI suggestion requires individual review";
+    if (result._ai) item.error = result._discogs ? "Discogs release requires individual review" : "AI suggestion requires individual review";
     else if ((result._score || 0) < 0.55) item.error = "Low-confidence result";
     initChoices(item);
   } catch (e) {
