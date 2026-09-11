@@ -169,3 +169,70 @@ class MultiModelTests(unittest.TestCase):
                 [{'id':'1','artist':'A','title':'T','expected_tags':[]}],os.path.join(root,'runs.json'),None,lambda *args:{'tags':[]})
         self.assertEqual(result['models'],['one'])
         self.assertEqual(len(result['results']),1)
+
+class TimeoutTests(unittest.TestCase):
+    def test_settings_roundtrip(self):
+        import config_store
+        with tempfile.TemporaryDirectory() as root:
+            path=os.path.join(root,'.env')
+            self.assertEqual(config_store.read(path)['ai_timeout_seconds'],120)
+            config_store.save(path,{'ai_timeout_seconds':180})
+            self.assertEqual(config_store.read(path)['ai_timeout_seconds'],180)
+            for value in (True,14,301,30.5,'120'):
+                with self.assertRaises(ValueError):config_store.save(path,{'ai_timeout_seconds':value})
+    def test_timeout_no_retry(self):
+        for limit in (120,180):
+            config={'ai_base_url':'https://example.com','ai_model':'test','ai_api_key':''}
+            if limit==180:config['ai_timeout_seconds']=limit
+            with patch('ai_tags.build_opener') as opener:
+                opener.return_value.open.side_effect=TimeoutError()
+                with self.assertRaisesRegex(ValueError,str(limit)+' seconds'):
+                    ai_tags.query(config,{'artist':'A','title':'T'},None)
+                self.assertEqual(opener.return_value.open.call_count,1)
+                self.assertEqual(opener.return_value.open.call_args.kwargs['timeout'],limit)
+
+class JSONOutputTests(unittest.TestCase):
+    def test_commentary_and_fences(self):
+        for content in ('Here is the result:\n{"tags":[],"year":1999}\nDone.', '```JSON\n{"tags":[]}\n```'):
+            self.assertEqual(ai_tags.parse_metadata(content)['tags'],[])
+    def test_ambiguous_and_malformed_rejected(self):
+        for content in ('{"tags":[]} {"tags":[]}', '{"tags":[],"tags":[]}', '{"broken": {"tags":[]}', '[{"tags":[]}]', "{'tags': []}"):
+            with self.assertRaises(ValueError):ai_tags.parse_metadata(content)
+    def test_default_json_compatibility_no_retry(self):
+        with patch('ai_tags.build_opener') as opener:
+            opener.return_value.open.side_effect=TimeoutError()
+            with self.assertRaises(ValueError):
+                ai_tags.query({'ai_base_url':'https://openrouter.ai/api/v1','ai_model':'openrouter/auto-beta','ai_api_key':''},{'artist':'A','title':'T'},None)
+            payload=json.loads(opener.return_value.open.call_args.args[0].data)
+            self.assertNotIn('response_format',payload)
+            self.assertNotIn('provider',payload)
+            self.assertEqual(opener.return_value.open.call_count,1)
+
+class OptionalJSONTests(unittest.TestCase):
+    def test_optional_json_without_routing_restriction(self):
+        with patch('ai_tags.build_opener') as opener:
+            opener.return_value.open.side_effect=TimeoutError()
+            with self.assertRaises(ValueError):
+                ai_tags.query({'ai_base_url':'https://openrouter.ai/api/v1','ai_model':'test','ai_api_key':'','ai_json_mode':True},{'artist':'A','title':'T'},None)
+            payload=json.loads(opener.return_value.open.call_args.args[0].data)
+            self.assertEqual(payload['response_format'],{'type':'json_object'})
+            self.assertNotIn('provider',payload)
+            self.assertEqual(opener.return_value.open.call_count,1)
+
+class IdentitySuggestionTests(unittest.TestCase):
+    def test_optional_identity(self):
+        import ai_tags
+        value=ai_tags.parse_metadata('{"tags":[],"title":" Song ","artists":["Artist","Guest"]}')
+        self.assertEqual(value['title'],'Song')
+        self.assertEqual(value['artists'],['Artist','Guest'])
+        self.assertIsNone(ai_tags.parse_metadata('{"tags":[]}')['title'])
+        for extra in ({'title':12},{'artists':'Artist'},{'artists':['']}):
+            with self.assertRaises(ValueError):ai_tags.parse_metadata(json.dumps({'tags':[],**extra}))
+
+class RecordLabelTests(unittest.TestCase):
+    def test_label_validation(self):
+        import ai_tags
+        self.assertEqual(ai_tags.parse_metadata('{"tags":[],"label":" Columbia "}')['label'],'Columbia')
+        self.assertIsNone(ai_tags.parse_metadata('{"tags":[]}')['label'])
+        for label in (123, [], '', 'x'*301):
+            with self.assertRaises(ValueError):ai_tags.parse_metadata(json.dumps({'tags':[],'label':label}))

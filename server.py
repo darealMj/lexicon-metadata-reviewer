@@ -16,6 +16,8 @@ _history_spec.loader.exec_module(history)
 import ai_tags
 import ai_tournament
 import ai_library
+import model_pricing
+import discogs_source
 AI_RUNS_FILE = os.path.join(ROOT, 'ai-evaluation-runs.json')
 HISTORY_FILE = os.path.join(ROOT, 'change-history.json')
 
@@ -192,6 +194,8 @@ class Handler(SimpleHTTPRequestHandler):
         public_files = {
             '/index.html', '/ai-lab.html', '/js/ai-lab.js', '/styles/ai-lab.css', '/evals/tag-benchmark.json',
             '/assets/logo.svg',
+            '/js/model-pricing.js',
+            '/styles/model-pricing.css',
             '/js/api.js',
             '/js/app.js',
             '/js/csv.js',
@@ -220,12 +224,22 @@ class Handler(SimpleHTTPRequestHandler):
     def metadata_request(self):
         parts = urlparse(self.path).path.strip('/').split('/')
         try:
+            if len(parts)==3 and parts[:2]==['metadata','discogs']:
+                query=parse_qs(urlparse(self.path).query)
+                params={k:query.get(k,[''])[0].strip() for k in ('artist','title','id')}
+                if any(len(v)>300 for v in params.values()):raise ValueError('Discogs query too long')
+                data=discogs_source.fetch(parts[2],params,read_config()['discogs_api_key'],HTTPS_CONTEXT,cache_connection)
+                if parts[2]=='record':data=discogs_source.release_result(data,params['artist'],params['title'],lexicon_json('GET','/v1/tags'))
+                return self.send_json(data)
+            if parts == ['metadata','ai-pricing']:
+                config=read_config()
+                return self.send_json({**model_pricing.catalog(HTTPS_CONTEXT), 'selected_model':config['ai_model'], 'base_url':config['ai_base_url']})
             if parts == ['metadata','ai']:
                 config = read_config()
-                return self.send_json({'base_url':config['ai_base_url'], 'model':config['ai_model'], 'model_2':config['ai_model_2'], 'model_3':config['ai_model_3'], 'max_tokens':config['ai_max_tokens'], 'web_search':config['ai_web_search'], 'key_configured':bool(config['ai_api_key']), 'runs':ai_tags.read_runs(AI_RUNS_FILE)})
+                return self.send_json({'base_url':config['ai_base_url'], 'model':config['ai_model'], 'model_2':config['ai_model_2'], 'model_3':config['ai_model_3'], 'max_tokens':config['ai_max_tokens'], 'timeout_seconds':config['ai_timeout_seconds'], 'web_search':config['ai_web_search'], 'wikipedia':config['ai_wikipedia'], 'json_mode':config['ai_json_mode'], 'key_configured':bool(config['ai_api_key']), 'runs':ai_tags.read_runs(AI_RUNS_FILE)})
             if parts == ['metadata','config']:
                 config = read_config()
-                return self.send_json({'config_storage':'env', 'audiodb_configured':bool(config['audiodb_api_key']), 'sonovault_configured':bool(config['sonovault_api_key']), **{key:config[key] for key in ('advanced_mode', 'overwrite_custom_tags', 'include_mix_tags_from_title', 'show_debug_log', 'theme')}})
+                return self.send_json({'config_storage':'env', 'discogs_configured':bool(config['discogs_api_key']), 'audiodb_configured':bool(config['audiodb_api_key']), 'sonovault_configured':bool(config['sonovault_api_key']), **{key:config[key] for key in ('advanced_mode', 'overwrite_custom_tags', 'include_mix_tags_from_title', 'show_debug_log', 'theme')}})
             if parts == ['metadata','history']:
                 with history.LOCK:
                     return self.send_json({'entries':history.read(HISTORY_FILE)})
@@ -337,7 +351,7 @@ class Handler(SimpleHTTPRequestHandler):
                             if read_config() == original: save_config({'ai_model':model, 'ai_model_2':'', 'ai_model_3':''})
                     return self.send_json(ai_tournament.execute(body, read_config(), AI_RUNS_FILE, HTTPS_CONTEXT, select_winner))
                 if self.path.endswith('/config'):
-                    if not isinstance(body, dict) or any(k not in ('ai_api_key','ai_base_url','ai_model','ai_model_2','ai_model_3','ai_max_tokens','ai_web_search') for k in body):
+                    if not isinstance(body, dict) or any(k not in ('ai_api_key','ai_base_url','ai_model','ai_model_2','ai_model_3','ai_max_tokens','ai_timeout_seconds','ai_web_search','ai_wikipedia','ai_json_mode') for k in body):
                         raise ValueError('Invalid AI settings')
                     config_store.validate(body)
                     ai_tags.endpoint(body.get('ai_base_url', read_config()['ai_base_url']))

@@ -2,10 +2,10 @@
 import json, os, tempfile, threading
 
 LOCK = threading.RLock()
-DEFAULTS = {'sonovault_api_key':'', 'audiodb_api_key':'123', 'advanced_mode':False,
+DEFAULTS = {'discogs_api_key':'', 'sonovault_api_key':'', 'audiodb_api_key':'123', 'advanced_mode':False,
             'overwrite_custom_tags':False, 'include_mix_tags_from_title':True,
             'show_debug_log':False, 'theme':'system', 'ai_api_key':'',
-            'ai_base_url':'https://openrouter.ai/api/v1', 'ai_model':'', 'ai_model_2':'', 'ai_model_3':'', 'ai_max_tokens':4096, 'ai_web_search':True}
+            'ai_base_url':'https://openrouter.ai/api/v1', 'ai_model':'', 'ai_model_2':'', 'ai_model_3':'', 'ai_max_tokens':4096, 'ai_timeout_seconds':120, 'ai_web_search':True, 'ai_wikipedia':True, 'ai_json_mode':False}
 ENV_NAMES = {key:key.upper() for key in DEFAULTS}
 
 def validate(changes):
@@ -14,6 +14,9 @@ def validate(changes):
     for key, value in changes.items():
         if isinstance(DEFAULTS[key], bool):
             if not isinstance(value, bool): raise ValueError(key + ' must be true or false')
+        elif key == 'ai_timeout_seconds':
+            if type(value) is not int or not 15 <= value <= 300:
+                raise ValueError('AI timeout must be an integer between 15 and 300 seconds')
         elif key == 'ai_max_tokens':
             if type(value) is not int or not 256 <= value <= 32768:
                 raise ValueError('AI token limit must be an integer between 256 and 32768')
@@ -83,9 +86,9 @@ def read(path):
             if isinstance(default, bool):
                 if value.lower() not in ('true', 'false'): raise ValueError(ENV_NAMES[key] + ' must be true or false')
                 value = value.lower() == 'true'
-            elif key == 'ai_max_tokens':
+            elif key in ('ai_max_tokens','ai_timeout_seconds'):
                 try: value = int(value)
-                except ValueError: raise ValueError('AI_MAX_TOKENS must be an integer') from None
+                except ValueError: raise ValueError(ENV_NAMES[key] + ' must be an integer') from None
             elif key.endswith('_api_key'): value = value.strip()
             config[key] = value
         config['audiodb_api_key'] = config['audiodb_api_key'] or '123'
