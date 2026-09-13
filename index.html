@@ -120,15 +120,14 @@
       <div class="card">
         <div class="row">
           <label
-            >Metadata source
+            >Primary metadata source
             <select id="metadataSource">
               <option value="ai">AI / OpenRouter (Model 1 from AI lab)</option>
-              <option value="discogs">Discogs</option><option value="audiodb">TheAudioDB only</option>
-              <option value="sonovault">Sonovault only</option>
-              <option value="audiodb-sonovault" selected>TheAudioDB → Sonovault fallback</option>
-              <option value="sonovault-audiodb">Sonovault → TheAudioDB fallback</option>
+              <option value="discogs">Discogs</option><option value="audiodb">TheAudioDB</option>
+              <option value="sonovault">Sonovault</option>
             </select></label
           >
+          <label>Fallback source<select id="metadataFallback" title="Used when the primary lookup fails, has no match, or has incomplete metadata. One source record is selected; fields from different records are not combined."><option value="">None</option><option value="ai">AI / OpenRouter</option><option value="discogs">Discogs</option><option value="audiodb">TheAudioDB</option><option value="sonovault">Sonovault</option></select></label>
           <label><input id="advancedMode" type="checkbox" /> Advanced mode</label
           ><span id="configStatus" class="muted">Checking local configuration…</span>
           <span class="action-with-help"
