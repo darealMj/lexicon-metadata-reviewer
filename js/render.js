@@ -150,6 +150,7 @@ function controls() {
     csvFile,
     loadDemo,
     metadataSource,
+    $("#metadataFallback"),
     advancedMode,
     $("#settingsButton"),
   ])
