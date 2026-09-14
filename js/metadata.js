@@ -354,6 +354,8 @@ async function lookupAll() {
   const sources = [metadataSource.value, fallback].filter((s,i,a)=>s && a.indexOf(s)===i);
   if(sources.includes('ai') && !confirm(`Look up ${state.rows.filter(r=>!r.applied).length} tracks using Model 1 from AI lab? Uncached tracks incur model/search charges. Artist, title, and the allowed custom-tag taxonomy are sent to the provider.`))return;
   setBusy(true);
+  $("#searchBtn").classList.toggle("is-loading", true);
+  $("#searchBtn").setAttribute?.("aria-busy", "true");
   const akey = "",
     svkey = "",
     mode = sources.join("-");
@@ -372,6 +374,8 @@ async function lookupAll() {
         );
     }
   } finally {
+    $("#searchBtn").classList.toggle("is-loading", false);
+    $("#searchBtn").setAttribute?.("aria-busy", "false");
     state.busy = false;
     render();
     controls();
