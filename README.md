@@ -239,3 +239,5 @@ AI and Wikipedia searches remove recognized DJ edit markers from search titles, 
 
 ### Discogs source
 Select **Discogs** in the library metadata source menu. Add a personal access token in Settings (stored privately as `DISCOGS_API_KEY` in `.env`; blank retains it). Search retrieves up to ten release candidates; use the per-track release picker to select an edition. The first candidate is displayed for individual review, not automatically accepted. Genres/styles are release-level evidence, and release years can be reissue years. Exact matching labels reuse existing Lexicon custom tags; unmatched labels remain visible as warnings. No AI inference is used. Responses are stored in the local metadata cache; Clear cache refreshes them. Title/artist suggestions require a unique matching track title. Discogs data links back to the source release.
+
+Under **Find Your Tracks**, select **Incoming only** to browse Lexicon’s incoming prep queue. Loading and searches use the incoming source, and pagination retains that scope. Your scope selection is remembered. Metadata apply does not mark tracks Done in Lexicon.

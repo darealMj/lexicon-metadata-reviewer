@@ -91,6 +91,12 @@ systemTheme?.addEventListener("change", () => {
 applyTheme();
 loadTracks.onclick = loadFirst;
 lexSearch.onclick = searchLexicon;
+const trackScope = document.querySelector("#trackScope");
+trackScope.value = localStorage.getItem("trackScope") === "incoming" ? "incoming" : "non-archived";
+trackScope.onchange = () => {
+  localStorage.setItem("trackScope", trackScope.value);
+  if (state.connected && !state.busy) searchLexicon();
+};
 searchBtn.onclick = lookupAll;
 acceptAll.onclick = () => {
   if (state.busy) return;
@@ -139,6 +145,8 @@ metadataSource.value =
   localStorage.getItem("metadataSource") || "audiodb-sonovault";
 prevPage.onclick = () => loadPage(Math.max(0, state.pageOffset - PAGE_SIZE));
 nextPage.onclick = () => loadPage(state.pageOffset + PAGE_SIZE);
+document.querySelector("#prevPageBottom").onclick = prevPage.onclick;
+document.querySelector("#nextPageBottom").onclick = nextPage.onclick;
 for (const input of [lexArtist, lexTitle, lexGenre, lexAlbum, lexTag])
   input.onkeydown = (e) => {
     if (e.key === "Enter" && state.connected && !state.busy) searchLexicon();

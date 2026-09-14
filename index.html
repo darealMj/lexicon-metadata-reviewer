@@ -56,8 +56,8 @@
       </div>
 
       <div id="lexPanel" class="card">
-        <div class="section-label">FIND YOUR TRACKS</div>
-        <div class="row">
+        <div class="tracks-heading">
+          <div class="section-label">FIND YOUR TRACKS</div>
           <span id="connStatus" class="status" role="status">Connecting to Lexicon…</span
           ><button id="retryConnection" class="secondary hidden" onclick="connectLexicon()">
             Retry connection
@@ -78,15 +78,10 @@
               list="tagSuggestions"
               placeholder="Start typing a tag name" /></label
           ><datalist id="tagSuggestions"></datalist
-          ><button id="lexSearch" disabled>Search Lexicon</button
-          ><button id="loadTracks" class="secondary" disabled>Load first 100 tracks</button>
+          ><label style="flex:0 0 auto">Track scope<select id="trackScope" style="width:auto;min-width:140px"><option value="non-archived">Library</option><option value="incoming">Incoming only</option></select></label>
         </div>
         <div class="row">
-          <button id="prevPage" class="secondary" disabled>Previous</button
-          ><button id="nextPage" class="secondary" disabled>Next</button
-          ><span id="pageInfo" class="muted"></span>
-        </div>
-        <span class="help-wrap"
+          <span class="action-with-help"><button id="lexSearch" aria-describedby="help-search" disabled>Search Lexicon</button><span class="help-wrap"
           ><button
             type="button"
             class="info-button"
@@ -99,7 +94,9 @@
             ignoring case. Choose a custom tag from the suggestions; a unique partial tag name also
             works. Typo-tolerant fuzzy search is not provided.</span
           ></span
-        >
+        ></span><button id="loadTracks" class="secondary" disabled>Load first 100 tracks</button>
+        </div>
+
         <p id="searchNotice" class="muted" role="status"></p>
       </div>
 
@@ -177,6 +174,7 @@
         <div class="section-label">
           METADATA REVIEW <span>Pick a value in each column to build your final output</span>
         </div>
+        <nav id="paginationTop" class="results-pagination" aria-label="Results pagination top" hidden><span id="pageInfo" class="muted"></span><button id="prevPage" class="secondary" aria-label="Previous results page" disabled>Previous</button><button id="nextPage" class="secondary" aria-label="Next results page" disabled>Next</button></nav>
         <div class="table-wrap">
           <table>
             <thead>
@@ -191,6 +189,7 @@
             <tbody id="tbody"></tbody>
           </table>
         </div>
+        <nav id="paginationBottom" class="results-pagination" aria-label="Results pagination bottom" hidden><span id="pageInfoBottom" class="muted"></span><button id="prevPageBottom" class="secondary" aria-label="Previous results page" disabled>Previous</button><button id="nextPageBottom" class="secondary" aria-label="Next results page" disabled>Next</button></nav>
       </div>
       <details id="debugPanel" class="card hidden">
         <summary>Debug log</summary>

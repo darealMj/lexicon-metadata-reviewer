@@ -138,6 +138,7 @@ function controls() {
         !r.applied,
     );
   lexSearch.disabled = loadTracks.disabled = state.busy || !state.connected;
+  $("#trackScope").disabled = state.busy || !state.connected;
   prevPage.disabled =
     state.busy || state.sourceMode !== "lexicon" || state.pageOffset === 0;
   nextPage.disabled =
@@ -158,6 +159,11 @@ function controls() {
     state.sourceMode === "lexicon" && state.pageTotal
       ? `${state.pageOffset + 1}–${Math.min(state.pageOffset + state.rows.length, state.pageTotal)} of ${state.pageTotal} tracks`
       : "";
+  const showPagination = state.sourceMode === "lexicon" && state.rows.length > 0;
+  $("#paginationTop").hidden = $("#paginationBottom").hidden = !showPagination;
+  $("#prevPageBottom").disabled = prevPage.disabled;
+  $("#nextPageBottom").disabled = nextPage.disabled;
+  $("#pageInfoBottom").textContent = pageInfo.textContent;
   document.querySelectorAll("#tbody tr").forEach((tr) => {
     const item = state.rows.find((r) => r.id === Number(tr.dataset.rowId));
     if (state.busy || item?.applied)
