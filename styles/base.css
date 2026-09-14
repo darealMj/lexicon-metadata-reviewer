@@ -449,3 +449,22 @@ input::placeholder {
   color: #798697;
   opacity: 1;
 }
+
+/* Lookup activity stays visible while controls are disabled. */
+button.is-loading::before {
+  content: "";
+  display: inline-block;
+  width: .85em;
+  height: .85em;
+  margin-right: .5em;
+  vertical-align: -.08em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: lookup-spin .75s linear infinite;
+}
+button.is-loading:disabled { opacity: 1; cursor: progress; }
+@keyframes lookup-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  button.is-loading::before { animation: none; }
+}
