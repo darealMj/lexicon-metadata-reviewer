@@ -141,8 +141,21 @@ console.info(
   new Date().toISOString(),
 );
 localStorage.removeItem("sonovaultKey");
-metadataSource.value =
-  localStorage.getItem("metadataSource") || "audiodb-sonovault";
+const savedSource = (localStorage.getItem("metadataSource") || "audiodb-sonovault").split("-");
+const allowedSources = ["ai", "discogs", "audiodb", "sonovault"];
+metadataSource.value = allowedSources.includes(savedSource[0]) ? savedSource[0] : "audiodb";
+const fallbackSelect = document.querySelector("#metadataFallback");
+const savedFallback = localStorage.getItem("metadataFallback") ?? savedSource[1] ?? "";
+fallbackSelect.value = allowedSources.includes(savedFallback) && savedFallback !== metadataSource.value ? savedFallback : "";
+function saveSourceChoices() {
+  if(fallbackSelect.value === metadataSource.value) fallbackSelect.value = "";
+  for(const option of (fallbackSelect.options || [])) option.disabled = option.value === metadataSource.value;
+  localStorage.setItem("metadataSource", metadataSource.value);
+  localStorage.setItem("metadataFallback", fallbackSelect.value);
+}
+metadataSource.onchange = saveSourceChoices;
+fallbackSelect.onchange = saveSourceChoices;
+saveSourceChoices();
 prevPage.onclick = () => loadPage(Math.max(0, state.pageOffset - PAGE_SIZE));
 nextPage.onclick = () => loadPage(state.pageOffset + PAGE_SIZE);
 document.querySelector("#prevPageBottom").onclick = prevPage.onclick;

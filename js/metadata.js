@@ -273,15 +273,17 @@ async function lookupSonovault(artist, title) {
   );
 }
 function usefulMissing(r) {
-  return ["AlbumTitle", "Genre", "Year", "TrackNumber", "Label"].some(
+  return (r?._ai ? ["AlbumTitle", "Genre", "Year", "Label"] : ["AlbumTitle", "Genre", "Year", "TrackNumber", "Label"]).some(
     (f) => !proposed(r, f),
   );
 }
 function mergeResults(primary, secondary) {
   if (!primary) return secondary;
   if (!secondary) return primary;
-  const chosen =
-    (primary._score || 0) < 0.55 &&
+  const completeness = r => ["AlbumTitle", "Genre", "Year", "Label"].filter(f=>proposed(r,f)).length;
+  const chosen = primary._ai || secondary._ai
+    ? (completeness(secondary) > completeness(primary) ? secondary : primary)
+    : (primary._score || 0) < 0.55 &&
     (secondary._score || 0) > (primary._score || 0) + 0.08
       ? secondary
       : primary;
@@ -309,7 +311,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
     src === "discogs" ? lookupDiscogs(item) : src === "ai" ? lookupAI(artist,title) : src === "audiodb"
       ? lookupAudioDB(artist, title, audioKey)
       : lookupSonovault(artist, title, svKey);
-  const pair = mode.split("-");
+  const pair = [...new Set(mode.split("-").filter(Boolean))];
   try {
     let first = null,
       primaryError = "";
@@ -322,7 +324,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
     let result = first;
     if (
       pair.length > 1 &&
-      (!first || usefulMissing(first) || (first._score || 0) < 0.55)
+      (!first || usefulMissing(first) || (!first._ai && (first._score || 0) < 0.55))
     ) {
       let second = null;
       try {
@@ -348,12 +350,17 @@ async function metadataLookup(item, audioKey, svKey, mode) {
 }
 async function lookupAll() {
   if (state.busy) return;
-  if(metadataSource.value==='ai' && !confirm(`Look up ${state.rows.filter(r=>!r.applied).length} tracks using Model 1 from AI lab? Uncached tracks incur model/search charges. Artist, title, and the allowed custom-tag taxonomy are sent to the provider.`))return;
+  const fallback = $("#metadataFallback").value;
+  const sources = [metadataSource.value, fallback].filter((s,i,a)=>s && a.indexOf(s)===i);
+  if(sources.includes('ai') && !confirm(`Look up ${state.rows.filter(r=>!r.applied).length} tracks using Model 1 from AI lab? Uncached tracks incur model/search charges. Artist, title, and the allowed custom-tag taxonomy are sent to the provider.`))return;
   setBusy(true);
+  $("#searchBtn").classList.toggle("is-loading", true);
+  $("#searchBtn").setAttribute?.("aria-busy", "true");
   const akey = "",
     svkey = "",
-    mode = metadataSource.value;
-  localStorage.setItem("metadataSource", mode);
+    mode = sources.join("-");
+  localStorage.setItem("metadataSource", metadataSource.value);
+  localStorage.setItem("metadataFallback", fallback);
   try {
     const pending = state.rows.filter((r) => !r.applied);
     for (let i = 0; i < pending.length; i++) {
@@ -367,6 +374,8 @@ async function lookupAll() {
         );
     }
   } finally {
+    $("#searchBtn").classList.toggle("is-loading", false);
+    $("#searchBtn").setAttribute?.("aria-busy", "false");
     state.busy = false;
     render();
     controls();

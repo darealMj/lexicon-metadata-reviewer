@@ -459,3 +459,22 @@ input::placeholder {
 .tracks-heading .section-label { margin:0; }
 .tracks-heading #connStatus { font-size:11px; line-height:1.3; padding:3px 7px; border-radius:5px; font-weight:500; }
 .tracks-heading #retryConnection { font-size:11px; padding:3px 7px; min-height:24px; }
+
+/* Lookup activity stays visible while controls are disabled. */
+button.is-loading::before {
+  content: "";
+  display: inline-block;
+  width: .85em;
+  height: .85em;
+  margin-right: .5em;
+  vertical-align: -.08em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: lookup-spin .75s linear infinite;
+}
+button.is-loading:disabled { opacity: 1; cursor: progress; }
+@keyframes lookup-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  button.is-loading::before { animation: none; }
+}

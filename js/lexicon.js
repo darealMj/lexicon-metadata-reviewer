@@ -62,6 +62,8 @@ async function loadPage(offset = 0) {
   if (state.busy) return;
   state.loadError = "";
   setBusy(true);
+  $("#loadTracks").classList.toggle("is-loading", true);
+  $("#loadTracks").setAttribute?.("aria-busy", "true");
   try {
     status.textContent = "Loading Lexicon tracks…";
     let tracks, total;
@@ -85,6 +87,8 @@ async function loadPage(offset = 0) {
     dbg("Load failed", e.message);
     state.loadError = "Load failed: " + e.message;
   } finally {
+    $("#loadTracks").classList.toggle("is-loading", false);
+    $("#loadTracks").setAttribute?.("aria-busy", "false");
     state.busy = false;
     render();
     controls();
@@ -139,6 +143,8 @@ async function searchLexicon() {
   state.loadError = "";
   searchNotice.textContent = "";
   setBusy(true);
+  $("#lexSearch").classList.toggle("is-loading", true);
+  $("#lexSearch").setAttribute?.("aria-busy", "true");
   try {
     status.textContent = "Searching Lexicon…";
     if (lexTag.value.trim()) await refreshTags();
@@ -162,6 +168,8 @@ async function searchLexicon() {
     state.loadError = "Search failed: " + e.message;
     searchNotice.textContent = e.message;
   } finally {
+    $("#lexSearch").classList.toggle("is-loading", false);
+    $("#lexSearch").setAttribute?.("aria-busy", "false");
     state.busy = false;
     render();
     controls();
