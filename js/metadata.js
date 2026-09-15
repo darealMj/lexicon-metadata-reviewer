@@ -7,6 +7,7 @@ import { $, metadataSource, status } from "./dom.js";
 import { controls, render } from "./render.js";
 import { localMetadata } from "./api.js";
 function registerRecord(result, provider, id) {
+  result._savedAt = Date.now();
   result._provider = provider;
   result._recordId =
     typeof id === "string" || typeof id === "number" ? String(id) : "";
@@ -30,6 +31,7 @@ function recordHTML(item) {
       ? `<p class="muted">API match: ${esc(recordLabel(item.result))}</p>`
       : "");
   const options = [...state.sourceRecords.entries()]
+    .sort((a,b)=>(b[1]._savedAt || 0)-(a[1]._savedAt || 0))
     .map(
       ([key, r]) =>
         `<option value="${esc(key)}">${esc(recordLabel(r))}</option>`,
