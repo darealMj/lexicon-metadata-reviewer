@@ -174,20 +174,18 @@
           METADATA REVIEW <span>Pick a value in each column to build your final output</span>
         </div>
         <nav id="paginationTop" class="results-pagination" aria-label="Results pagination top" hidden><span id="pageInfo" class="muted"></span><button id="prevPage" class="secondary" aria-label="Previous results page" disabled>Previous</button><button id="nextPage" class="secondary" aria-label="Next results page" disabled>Next</button></nav>
-        <div class="table-wrap">
+        <div class="review-layout"><div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Track</th>
                 <th>Review</th>
-                <th>Decision</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
           </table>
-        </div>
+        </div><aside class="page-overrides"><h3>Page overrides</h3><p class="muted">Filled fields apply to checked tracks. Blank fields keep individual choices. Version-protected titles stay unchanged.</p><label>Title<input aria-label="Page override Title" oninput="setPageOverride('Title',this.value)"></label><label>Artist<input aria-label="Page override Artist" oninput="setPageOverride('Artist',this.value)"></label><label>AlbumTitle<input aria-label="Page override AlbumTitle" oninput="setPageOverride('AlbumTitle',this.value)"></label><label>Genre<input aria-label="Page override Genre" oninput="setPageOverride('Genre',this.value)"></label><label>Year<input aria-label="Page override Year" oninput="setPageOverride('Year',this.value)"></label><label>TrackNumber<input aria-label="Page override TrackNumber" oninput="setPageOverride('TrackNumber',this.value)"></label><label>Label<input aria-label="Page override Label" oninput="setPageOverride('Label',this.value)"></label><label>Custom tags <span title="Additive mode preserves existing tags. Overwrite replaces all custom tags with these pills plus the final main genre. An empty list can remove other tags." aria-label="Custom tags are additive">ⓘ</span><input aria-label="Page override custom tags" id="overrideTagInput" oninput="commitOverrideTags(this,false)" onblur="commitOverrideTags(this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();commitOverrideTags(this,true)}"></label><p class="muted" style="margin:4px 0 8px">Separate tags with commas.</p><div id="overrideTagPills" class="tagrow"></div><label class="override-mode-toggle"><input id="overrideTagReplace" type="checkbox" onchange="setOverrideTagMode(this.checked)"> Overwrite existing tags</label><div id="overrideTagModeNote" class="override-mode-note">Custom tags · Additive mode</div><p id="overrideError" role="alert"></p><div class="row"><button class="secondary" onclick="allPageOverrides(true)">Select all</button><button class="secondary" onclick="allPageOverrides(false)">Clear selection</button></div></aside></div>
         <nav id="paginationBottom" class="results-pagination" aria-label="Results pagination bottom" hidden><span id="pageInfoBottom" class="muted"></span><button id="prevPageBottom" class="secondary" aria-label="Previous results page" disabled>Previous</button><button id="nextPageBottom" class="secondary" aria-label="Next results page" disabled>Next</button></nav>
       </div>
       <details id="debugPanel" class="card hidden">

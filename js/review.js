@@ -35,6 +35,7 @@ function makeRows(tracks) {
     return cached
       ? {
           ...cached,
+          usePageOverrides: false,
           id: i + 1,
         }
       : {

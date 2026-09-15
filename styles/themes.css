@@ -792,3 +792,29 @@ input:focus-visible {
   width: 100%;
   height: 100%;
 }
+
+/* Separate the shared override panel from the surrounding review surface. */
+.page-overrides { background:#24272e; border-color:#3b404b; }
+:root[data-theme="light"] .page-overrides { background:#e8ebf0; border-color:#cbd2dc; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .page-overrides { background:#e8ebf0; border-color:#cbd2dc; }
+}
+
+/* Muted accent colors for override tag pills. */
+.page-overrides .override-color-0 { background:#492b3a; color:#ffd0e0; border-color:#86516a; }
+.page-overrides .override-color-1 { background:#243e55; color:#c5e4ff; border-color:#486f94; }
+.page-overrides .override-color-2 { background:#22463c; color:#c4f0dc; border-color:#487d68; }
+.page-overrides .override-color-3 { background:#4a4027; color:#ffe4a3; border-color:#857044; }
+.page-overrides .override-color-4 { background:#3b3054; color:#e2d3ff; border-color:#70608e; }
+:root[data-theme="light"] .page-overrides .override-color-0 { background:#f8dfeb; color:#702740; border-color:#dbadc2; }
+:root[data-theme="light"] .page-overrides .override-color-1 { background:#dcebf9; color:#234f78; border-color:#a9c7e4; }
+:root[data-theme="light"] .page-overrides .override-color-2 { background:#dcefe5; color:#215b43; border-color:#a7cfb9; }
+:root[data-theme="light"] .page-overrides .override-color-3 { background:#f5e9cc; color:#67501b; border-color:#d9c28b; }
+:root[data-theme="light"] .page-overrides .override-color-4 { background:#eae1f5; color:#543578; border-color:#c6b2df; }
+@media (prefers-color-scheme: light) {
+:root:not([data-theme]) .page-overrides .override-color-0 { background:#f8dfeb; color:#702740; border-color:#dbadc2; }
+:root:not([data-theme]) .page-overrides .override-color-1 { background:#dcebf9; color:#234f78; border-color:#a9c7e4; }
+:root:not([data-theme]) .page-overrides .override-color-2 { background:#dcefe5; color:#215b43; border-color:#a7cfb9; }
+:root:not([data-theme]) .page-overrides .override-color-3 { background:#f5e9cc; color:#67501b; border-color:#d9c28b; }
+:root:not([data-theme]) .page-overrides .override-color-4 { background:#eae1f5; color:#543578; border-color:#c6b2df; }
+}

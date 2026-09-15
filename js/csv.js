@@ -1,6 +1,6 @@
 import { state } from "./state.js";
 import { controls, render } from "./render.js";
-import { chosenValue, hasProposal, invalidManual } from "./model.js";
+import { overrideValue, effectiveTagMode, chosenValue, hasProposal, invalidManual } from "./model.js";
 import { FIELDS, val } from "./utils.js";
 import { effectiveTags } from "./tags.js";
 function parseCSV(text) {
@@ -81,7 +81,7 @@ function reviewedCSV() {
     .forEach((x) => {
       const o = {
         Location: val(x.original, "Location"),
-        CustomTagAction: x.tagMode === "replace" ? "replace" : "add",
+        CustomTagAction: effectiveTagMode(x) === "replace" ? "replace" : "add",
         CustomGenreTags: effectiveTags(x)
           .map((t) => "#" + t.replace(/\s+/g, "_"))
           .join(" "),
@@ -89,7 +89,7 @@ function reviewedCSV() {
       FIELDS.forEach((f) => {
         o[f] = chosenValue(x, f);
       });
-      if (["api", "record"].includes(x.fields.Genre) && x.mainGenre)
+      if (!overrideValue(x,"Genre") && ["api", "record"].includes(x.fields.Genre) && x.mainGenre)
         o.Genre = x.mainGenre;
       m.push(h.map((k) => o[k] ?? ""));
     });

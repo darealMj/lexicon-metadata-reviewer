@@ -1,6 +1,19 @@
 import { FIELDS, val } from "./utils.js";
 import { canonicalGenre, selectedTags, splitGenres } from "./tags.js";
 import { state } from "./state.js";
+function overrideValue(item, field) {
+  if (!item.usePageOverrides) return '';
+  if (field === 'Title' && versionProtected(item)) return '';
+  return String((item.applied ? item.appliedOverrides : state.pageOverrides)?.[field] ?? '').trim();
+}
+function overrideTags(item) {
+  return item.usePageOverrides ? String((item.applied ? item.appliedOverrides : state.pageOverrides)?.CustomTags || '').split(',').map(t=>t.trim()).filter(Boolean) : [];
+}
+function effectiveTagMode(item) {
+  const overrides=item.applied ? item.appliedOverrides : state.pageOverrides;
+  if(item.usePageOverrides && overrides?.OverwriteTags) return 'replace';
+  return overrideTags(item).length ? 'add' : item.tagMode;
+}
 function versionProtected(item) {
   return /\b(clean|dirty|explicit|radio[ -]?edit|extended|main|edit|mix|dub|intro|outro|quick[ -]?hit|acapella|a[ -]?cappella|instrumental|remix|bootleg|mashup|re[ -]?drum|transition)\b/i.test(
     [
@@ -30,11 +43,12 @@ function manualError(item, f) {
 }
 function invalidManual(item) {
   return FIELDS.some(
-    (f) => item.fields[f] === "manual" && !canUse(item, f, "manual"),
+    (f) => overrideValue(item,f) ? !!manualError({manual:{[f]:overrideValue(item,f)}},f) : item.fields[f] === "manual" && !canUse(item, f, "manual"),
   );
 }
 function hasProposal(item) {
   return !!(
+    FIELDS.some(f=>overrideValue(item,f)) || overrideTags(item).length || (item.usePageOverrides && state.pageOverrides?.OverwriteTags) ||
     item.result ||
     item.reference ||
     Object.keys(item.manual || {}).length ||
@@ -43,6 +57,7 @@ function hasProposal(item) {
   );
 }
 function chosenValue(item, f) {
+  if (overrideValue(item,f)) return overrideValue(item,f);
   const choice = item.fields[f] || "current";
   if (choice === "current") return val(item.original, f);
   if (choice === "manual") return item.manual?.[f] ?? "";
@@ -55,6 +70,7 @@ function invalidate(item) {
 }
 function bulkEligible(item) {
   return (
+    !item.usePageOverrides &&
     !!item.result &&
     item.tagMode !== "replace" &&
     !Object.values(item.fields).includes("manual") &&
@@ -118,6 +134,7 @@ function initChoices(item) {
     val(item.original, "Genre");
 }
 function finalValue(item, f) {
+  if (overrideValue(item,f)) return overrideValue(item,f);
   return f === "Genre" && ["api", "record"].includes(item.fields[f])
     ? item.mainGenre
     : chosenValue(item, f);
@@ -129,6 +146,7 @@ function syncMainGenre(item) {
     : value || "";
 }
 export {
+  overrideValue, overrideTags, effectiveTagMode,
   versionProtected,
   canUse,
   manualError,

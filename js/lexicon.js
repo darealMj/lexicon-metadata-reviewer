@@ -15,6 +15,7 @@ import {
 import { api } from "./api.js";
 import { FIELDS, PAGE_SIZE, payload, unwrapList, val } from "./utils.js";
 import {
+  tagLabelKey,
   effectiveTags,
   ensureCategory,
   ensureTag,
@@ -25,7 +26,7 @@ import {
   validLexiconId,
 } from "./tags.js";
 import { controls, render } from "./render.js";
-import { canUse, chosenValue, hasProposal, invalidManual } from "./model.js";
+import { overrideTags, overrideValue, effectiveTagMode, canUse, chosenValue, hasProposal, invalidManual } from "./model.js";
 async function connectLexicon() {
   if (state.busy) return;
   setBusy(true);
@@ -212,22 +213,22 @@ async function applyOne(item) {
   for (const f of FIELDS) {
     const p = chosenValue(item, f);
     if (
-      ["api", "record", "manual"].includes(item.fields[f]) &&
-      canUse(item, f, item.fields[f]) &&
+      (overrideValue(item,f) || (["api", "record", "manual"].includes(item.fields[f]) &&
+      canUse(item, f, item.fields[f]))) &&
       (p !== "" || item.fields[f] === "manual")
     )
       patch[map[f]] = f === "Year" || f === "TrackNumber" ? Number(p) : p;
   }
-  if (["api", "record"].includes(item.fields.Genre) && item.mainGenre)
+  if (!overrideValue(item,"Genre") && ["api", "record"].includes(item.fields.Genre) && item.mainGenre)
     patch.genre = item.mainGenre;
   for (const field of ["year", "trackNumber"])
     if (field in patch && (!Number.isInteger(patch[field]) || patch[field] < 0))
       throw new Error("Invalid numeric value for " + field);
   const aiSource=item.fields.Genre === 'record' ? item.reference : item.result;
-  const aiReview={genre:!!(aiSource?._ai && ['api','record'].includes(item.fields.Genre)),tags:[]};
+  const aiReview={genre:!!(!overrideValue(item,'Genre') && aiSource?._ai && ['api','record'].includes(item.fields.Genre)),tags:[]};
   const aiTags=[...(item.result?._aiTags || []),...(item.reference?._aiTags || [])];
   const wanted = effectiveTags(item);
-  if (wanted.length || item.tagMode === "replace") {
+  if (wanted.length || effectiveTagMode(item) === "replace") {
     // Read the latest tags to avoid replacing tags added since this page loaded.
     const d = payload(
         await api("/v1/track?id=" + encodeURIComponent(item.lexiconId)),
@@ -244,6 +245,10 @@ async function applyOne(item) {
       );
     const ids = [];
     for (const label of wanted) {
+      if (overrideTags(item).some(t=>tagLabelKey(t)===tagLabelKey(label))) {
+        const alreadyAssigned=state.allTags.find(t=>current.tags.some(id=>String(id)===String(t.id)) && tagLabelKey(val(t,'label','name'))===tagLabelKey(label));
+        if(alreadyAssigned){ids.push(Number(alreadyAssigned.id));continue;}
+      }
       const suggested=aiTags.find(t=>t.label===label);
       if(suggested){
         const existing=state.allTags.find(t=>String(t.id)===String(suggested.id) && t.label===suggested.label && String(t.categoryId)===String(suggested.categoryId));
@@ -258,18 +263,19 @@ async function applyOne(item) {
     }
     patch.tags = [
       ...new Set(
-        item.tagMode === "replace"
+        effectiveTagMode(item) === "replace"
           ? ids
           : [...current.tags.map(Number), ...ids],
       ),
     ];
   }
   if (Object.keys(patch).length) await patchTrack(item.lexiconId, patch, aiReview.genre || aiReview.tags.length ? aiReview : null);
+  if(item.usePageOverrides) item.appliedOverrides={...state.pageOverrides};
   item.applied = true;
   if (item.error?.startsWith("Lexicon write failed:")) item.error = null;
 }
 function applyConfirmation(todo) {
-  const replaced = todo.filter((item) => item.tagMode === "replace");
+  const replaced = todo.filter((item) => effectiveTagMode(item) === "replace");
   return (
     `Apply changes to ${todo.length} accepted Lexicon track(s)?` +
     (replaced.length
