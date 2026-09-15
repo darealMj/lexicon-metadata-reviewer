@@ -171,3 +171,71 @@ window.addEventListener("load", async () => {
 });
 render();
 controls();
+
+let overridePreviewTimer;
+window.setPageOverride = (field,value) => {
+  if(state.busy || !['Title','Artist','AlbumTitle','Genre','Year','TrackNumber','Label','CustomTags'].includes(field)) return;
+  state.pageOverrides ??= {};
+  state.pageOverrides[field] = value;
+  for(const item of state.rows) if(item.usePageOverrides && !item.applied) item.decision='pending';
+  document.querySelector('#overrideError').textContent = ['Year','TrackNumber'].some(f=>String(state.pageOverrides[f] || '').trim() && (!/^\d+$/.test(state.pageOverrides[f].trim()) || !Number.isSafeInteger(Number(state.pageOverrides[f])))) ? 'Year and track number must be whole numbers of 0 or greater.' : '';
+  // Store values and invalidate approvals immediately; batch expensive row rendering.
+  clearTimeout(overridePreviewTimer);
+  if(state.rows.some(item=>item.usePageOverrides && !item.applied)) {
+    controls();
+    overridePreviewTimer = setTimeout(() => { render(); controls(); }, 200);
+  }
+};
+window.togglePageOverride = (id,enabled) => {
+  if(state.busy)return;
+  const item=state.rows.find(r=>r.id===id);
+  if(!item || item.applied)return;
+  item.usePageOverrides=enabled; item.decision='pending'; render(); controls();
+};
+window.allPageOverrides = enabled => {
+  if(state.busy)return;
+  for(const item of state.rows) if(!item.applied){item.usePageOverrides=enabled;item.decision='pending';}
+  render(); controls();
+};
+
+const overridePillColors = new Map();
+function drawOverrideTagPills() {
+  const container=document.querySelector('#overrideTagPills');
+  container.replaceChildren();
+  const tags=String(state.pageOverrides?.CustomTags || '').split(',').map(t=>t.trim()).filter(Boolean);
+  tags.forEach((tag,index)=>{
+    const pill=document.createElement('span');pill.className='tagchip override-tag-pill';
+    const colorKey=tag.normalize('NFC').trim().replace(/\s+/g,' ').toLowerCase();
+    if(!overridePillColors.has(colorKey)) overridePillColors.set(colorKey, Math.floor(Math.random()*5));
+    pill.classList.add('override-color-'+overridePillColors.get(colorKey));
+    const text=document.createElement('span');text.textContent=tag;
+    const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.setAttribute('aria-label','Remove '+tag);
+    remove.onclick=()=>{
+      if(state.busy)return;
+      tags.splice(index,1);window.setPageOverride('CustomTags',tags.join(', '));drawOverrideTagPills();
+    };
+    pill.append(text,remove);container.append(pill);
+  });
+}
+window.commitOverrideTags=(input,flush)=>{
+  if(state.busy)return;
+  const parts=input.value.split(',');
+  if(!flush && parts.length===1)return;
+  const remaining=flush?'':parts.pop();
+  const tags=String(state.pageOverrides?.CustomTags || '').split(',').map(t=>t.trim()).filter(Boolean);
+  const key=t=>t.normalize('NFC').trim().replace(/\s+/g,' ').toLowerCase();
+  for(const part of parts){const tag=part.trim();if(tag && !tags.some(t=>key(t)===key(tag)))tags.push(tag);}
+  input.value=remaining;
+  window.setPageOverride('CustomTags',tags.join(', '));drawOverrideTagPills();
+};
+
+window.setOverrideTagMode = enabled => {
+  if(state.busy)return;
+  state.pageOverrides ??= {};
+  state.pageOverrides.OverwriteTags=!!enabled;
+  for(const item of state.rows) if(item.usePageOverrides && !item.applied)item.decision='pending';
+  const note=document.querySelector('#overrideTagModeNote');
+  note.textContent=enabled?'Custom tags · Overwrite mode':'Custom tags · Additive mode';
+  note.classList.toggle('overwrite',!!enabled);
+  render();controls();
+};

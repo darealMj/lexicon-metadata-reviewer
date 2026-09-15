@@ -478,3 +478,23 @@ button.is-loading:disabled { opacity: 1; cursor: progress; }
 @media (prefers-reduced-motion: reduce) {
   button.is-loading::before { animation: none; }
 }
+
+.review-layout { display:grid; grid-template-columns:minmax(0,1fr) 240px; gap:16px; align-items:start; }
+.page-overrides { padding:14px; border:1px solid var(--border); border-radius:10px; position:sticky; top:12px; }
+.page-overrides h3 { margin:0 0 10px; }
+.page-overrides label { display:block; margin:14px 0; font-size:12px; line-height:1.5; }
+.page-overrides input { display:block; width:100%; box-sizing:border-box; margin-top:8px; }
+.page-overrides p { font-size:12px; }
+.page-overrides [title] { cursor:help; }
+.track-decisions { display:grid; gap:10px; margin-top:14px; }
+.track-decisions label { font-size:12px; }
+@media(max-width:1000px) { .review-layout { grid-template-columns:1fr; } .page-overrides { position:static; grid-row:1; } }
+
+.override-tag-pill { display:inline-flex; align-items:center; gap:6px; }
+.override-tag-pill button { background:transparent; color:inherit; border:0; padding:0 3px; min-height:20px; font-size:17px; line-height:1; }
+#overrideTagPills { flex-wrap:wrap; gap:6px; }
+
+.page-overrides .override-mode-toggle { display:flex; align-items:center; gap:7px; margin:12px 0 8px; }
+.page-overrides .override-mode-toggle input { width:auto; margin:0; }
+.override-mode-note { padding:8px 10px; border-radius:7px; font-size:11px; font-weight:600; background:#269f7120; color:inherit; border:1px solid #269f7170; }
+.override-mode-note.overwrite { background:#d6982520; border-color:#d6982580; }

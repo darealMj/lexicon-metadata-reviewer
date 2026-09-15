@@ -1,5 +1,5 @@
 import { editable } from "./review.js";
-import { finalValue, invalidate } from "./model.js";
+import { finalValue, invalidate, overrideTags, effectiveTagMode } from "./model.js";
 import { controls, render } from "./render.js";
 import { $, tagSuggestions } from "./dom.js";
 import { esc, payload, unwrapList, val } from "./utils.js";
@@ -133,10 +133,13 @@ function includedMixTags(item) {
 }
 function effectiveTags(item) {
   const genre = String(finalValue(item, "Genre") ?? "").trim();
+  const overrides=item.applied ? item.appliedOverrides : state.pageOverrides;
+  const pageReplace=item.usePageOverrides && overrides?.OverwriteTags;
   const tags = [
     ...(genre ? [genre] : []),
-    ...selectedTags(item),
-    ...includedMixTags(item),
+    ...(pageReplace ? [] : selectedTags(item)),
+    ...overrideTags(item),
+    ...(pageReplace ? [] : includedMixTags(item)),
   ];
   return tags.filter(
     (tag, i) =>
