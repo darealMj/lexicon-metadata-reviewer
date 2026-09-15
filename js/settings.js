@@ -163,8 +163,11 @@ async function loadLocalSettings() {
       ? "SonoVault key configured"
       : "Add your SonoVault key once in .env";
     const saved = await localMetadata("records");
-    for (const entry of saved.records)
-      commonResult(entry.provider, entry.record, "", "");
+    for (const [index,entry] of saved.records.entries()) {
+      const record = commonResult(entry.provider, entry.record, "", "");
+      const stored = state.sourceRecords.get(entry.provider + ':' + record._recordId);
+      if(stored) stored._savedAt = typeof entry.saved_at === 'number' ? entry.saved_at * 1000 : -index;
+    }
     render();
     controls();
   } catch (e) {

@@ -181,7 +181,7 @@ def saved_records():
     with CACHE_LOCK:
         db = cache_connection()
         try:
-            return [{'provider':p, 'record':json.loads(b)} for p,b in db.execute('SELECT provider,body FROM records ORDER BY saved_at DESC')]
+            return [{'provider':p, 'record':json.loads(b), 'saved_at':saved} for p,b,saved in db.execute('SELECT provider,body,saved_at FROM records ORDER BY saved_at DESC')]
         finally:
             db.close()
 
