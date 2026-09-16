@@ -87,8 +87,7 @@ function setManual(id, f, value) {
   if (
     !state.advanced ||
     !item ||
-    !FIELDS.includes(f) ||
-    (f === "Title" && versionProtected(item))
+    !FIELDS.includes(f)
   )
     return;
   item.manual ??= {};

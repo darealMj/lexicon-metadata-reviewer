@@ -96,12 +96,19 @@ function addGenreTag(id) {
   const x = editable(id),
     inp = $(`#extra-${id}`);
   if (!x || !inp) return;
-  const tag = canonicalGenre(inp.value);
+  const existing = state.allTags.find(t => tagLabelKey(val(t, "label", "name")) === tagLabelKey(inp.value));
+  const tag = existing ? val(existing, "label", "name") : canonicalGenre(inp.value);
   if (tag) {
-    x.genreTags.push(tag);
+    const index = x.genreTags.findIndex(t => tagLabelKey(typeof t === "string" ? t : t.label) === tagLabelKey(tag));
+    if (index < 0) x.genreTags.push(tag);
+    else x.genreTags[index] = {label: tag, enabled: true};
+    inp.value = "";
+    const scrollX = window.scrollX, scrollY = window.scrollY;
     invalidate(x);
     render();
     controls();
+    $(`#extra-${id}`)?.focus?.({preventScroll: true});
+    if (typeof window.scrollTo === "function") window.scrollTo(scrollX, scrollY);
   }
 }
 function detectedMixTags(item) {
@@ -173,9 +180,17 @@ function parseTags(d) {
   state.tagCategories = Array.isArray(d)
     ? []
     : unwrapList(d, ["categories", "customTagCategories"]);
+  state.tagsLoaded = true;
+  const category = findGenreCategory();
+  const genres = [...new Map(state.allTags.filter(t => category && String(t.categoryId) === String(category.id)).map(t => [tagLabelKey(val(t, "label", "name")), val(t, "label", "name")])).values()].filter(Boolean).sort((a,b)=>a.localeCompare(b));
+  const suggestions = $("#genreSuggestions");
+  if (suggestions) suggestions.innerHTML = genres.map(label => `<option value="${esc(label)}"></option>`).join("");
   tagSuggestions.innerHTML = state.allTags
     .map((t) => `<option value="${esc(val(t, "label", "name"))}"></option>`)
     .join("");
+}
+function isNewTag(label) {
+  return !!state.tagsLoaded && !!String(label || "").trim() && !state.allTags.some(t => tagLabelKey(val(t, "label", "name")) === tagLabelKey(label));
 }
 function tagLabelKey(label) {
   return String(label ?? "")
@@ -296,6 +311,7 @@ async function ensureTag(label, categoryId) {
 }
 export {
   GENRE_ALIASES,
+  isNewTag,
   canonicalGenre,
   splitGenres,
   detectedMixTags,

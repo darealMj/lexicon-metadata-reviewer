@@ -10,7 +10,7 @@ import {
   proposed,
   versionProtected,
 } from "./model.js";
-import { detectedMixTags, effectiveTags } from "./tags.js";
+import { detectedMixTags, effectiveTags, isNewTag } from "./tags.js";
 import { recordHTML, aiEvidence } from "./metadata.js";
 import { state } from "./state.js";
 import {
@@ -34,14 +34,17 @@ import {
   status,
   tbody,
 } from "./dom.js";
+function newTagBadge(label) {
+  return isNewTag(label) ? '<span class="new-tag-badge" title="Not in Lexicon yet. Created when this tag is applied.">New</span>' : "";
+}
 function tagHTML(item) {
   const chips = item.genreTags
     .map(
       (t, i) =>
-        `<label class="tagchip"><input type="checkbox" ${typeof t === "string" || t.enabled !== false ? "checked" : ""} onchange="toggleGenreTag(${item.id},${i},this.checked)">${esc(typeof t === "string" ? t : t.label)}</label>`,
+        `<label class="tagchip"><input type="checkbox" ${typeof t === "string" || t.enabled !== false ? "checked" : ""} onchange="toggleGenreTag(${item.id},${i},this.checked)">${esc(typeof t === "string" ? t : t.label)}${newTagBadge(typeof t === "string" ? t : t.label)}</label>`,
     )
     .join("");
-  return `<div class="tagbox"><div><b>Main Genre:</b> <span id="main-genre-${item.id}">${esc(finalValue(item, "Genre") || "—")}</span> <span class="muted">Always included in custom tags</span></div><div class="row" style="margin-top:8px"><label title="Off adds checked tags to existing tags. On replaces the complete custom tag list."><input type="checkbox" role="switch" aria-label="Overwrite custom tags for track ${item.id}" ${effectiveTagMode(item) === "replace" ? "checked" : ""} onchange="setTagMode(${item.id},this.checked?'replace':'add')"> Overwrite custom tags</label><label title="When overwriting, also include version markers found in this song's original title."><input type="checkbox" role="switch" aria-label="Include Mix tags from title for track ${item.id}" ${item.includeMix !== false ? "checked" : ""} ${effectiveTagMode(item) !== "replace" ? "disabled" : ""} onchange="setIncludeMix(${item.id},this.checked)"> Include Mix tags from title</label></div><div class="small muted" style="margin-top:8px">Mix tags detected: ${detectedMixTags(item).map(esc).join(", ") || "None"}</div>${effectiveTagMode(item) === "replace" ? `<p id="tag-preview-${item.id}" style="color:#b42318">${effectiveTags(item).length ? "Only these custom tags will remain: " + effectiveTags(item).map(esc).join(", ") : "No tags selected: all custom tags will be cleared."}</p>` : ""}<div class="tagrow"><b class="small">Custom Genre Tags:</b><button class="secondary" onclick="allGenreTags(${item.id},true)">Select all</button><button class="secondary" onclick="allGenreTags(${item.id},false)">Clear all</button>${chips || '<span class="muted">No genre tags parsed</span>'}</div><div class="row" style="margin-top:7px"><input id="extra-${item.id}" type="text" placeholder="Add tag, e.g. Rap"><button class="secondary" onclick="addGenreTag(${item.id})">Add tag</button></div></div>`;
+  return `<div class="tagbox"><div><b>Main Genre:</b> <span id="main-genre-${item.id}">${esc(finalValue(item, "Genre") || "—")}</span> <span class="muted">Always included in custom tags</span></div><div class="row" style="margin-top:8px"><label title="Off adds checked tags to existing tags. On replaces the complete custom tag list."><input type="checkbox" role="switch" aria-label="Overwrite custom tags for track ${item.id}" ${effectiveTagMode(item) === "replace" ? "checked" : ""} onchange="setTagMode(${item.id},this.checked?'replace':'add')"> Overwrite custom tags</label><label title="When overwriting, also include version markers found in this song's original title."><input type="checkbox" role="switch" aria-label="Include Mix tags from title for track ${item.id}" ${item.includeMix !== false ? "checked" : ""} ${effectiveTagMode(item) !== "replace" ? "disabled" : ""} onchange="setIncludeMix(${item.id},this.checked)"> Include Mix tags from title</label></div><div class="small muted" style="margin-top:8px">Mix tags detected: ${detectedMixTags(item).map(esc).join(", ") || "None"}</div>${effectiveTagMode(item) === "replace" ? `<p id="tag-preview-${item.id}" style="color:#b42318">${effectiveTags(item).length ? "Only these custom tags will remain: " + effectiveTags(item).map(esc).join(", ") : "No tags selected: all custom tags will be cleared."}</p>` : ""}<div class="tagrow"><b class="small">Custom Genre Tags:</b><button class="secondary" onclick="allGenreTags(${item.id},true)">Select all</button><button class="secondary" onclick="allGenreTags(${item.id},false)">Clear all</button>${chips || '<span class="muted">No genre tags parsed</span>'}</div><div class="row" style="margin-top:7px"><input list="genreSuggestions" oninput="selectSuggestedTag(${item.id},this,event)" onkeydown="if(event.key==='Enter'){event.preventDefault();addGenreTag(${item.id})}" id="extra-${item.id}" type="text" placeholder="Add tag, e.g. Rap"><button class="secondary" onclick="addGenreTag(${item.id})">Add tag</button></div></div>`;
 }
 function reviewHTML(item) {
   const picker = recordHTML(item) + aiEvidence(item.result) + aiEvidence(item.reference),
@@ -50,6 +53,7 @@ function reviewHTML(item) {
     return (
       picker +
       tagHTML(item) +
+    `<div class="row tag-review-actions"><span class="pill ${item.applied ? "applied" : esc(item.decision)}">${item.applied ? "applied" : esc(item.decision)}</span><button class="success" onclick="decide(${item.id},'accepted')" ${state.busy || !hasProposal(item) || invalidManual(item) || item.applied ? "disabled" : ""}>Accept</button><button class="danger" onclick="decide(${item.id},'rejected')" ${state.busy || item.applied ? "disabled" : ""}>Reject</button></div>` +
       (item.error
         ? `<p style="color:#b42318">${esc(item.error)}</p>`
         : '<p class="muted">Not looked up yet</p>')
@@ -69,7 +73,7 @@ function reviewHTML(item) {
     ])
       h += `<div class="source-cell column-${choice}"><button data-field="${f}" data-choice="${choice}" aria-label="Use ${label} for ${f} on track ${item.id}" aria-pressed="${ch === choice}" class="source-value ${ch === choice ? "active" : ""}" onclick="fieldChoice(${item.id},'${f}','${choice}')" ${choice !== "current" && !canUse(item, f, choice) ? "disabled" : ""}>${esc(value || "—")}</button></div>`;
     if (state.advanced)
-      h += `<div class="source-cell column-manual"><input type="text" class="typed-value ${ch === "manual" ? "active" : ""}" id="typed-${item.id}-${f}" aria-label="Typed ${f} for track ${item.id}" placeholder="Type a value" value="${esc(item.manual?.[f] ?? "")}" ${f === "Title" && versionProtected(item) ? "disabled" : ""} onfocus="activateManual(${item.id},'${f}',this.value)" oninput="setManual(${item.id},'${f}',this.value)"><span id="manual-error-${item.id}-${f}" class="muted" style="color:#b42318">${Object.hasOwn(item.manual || {}, f) ? esc(manualError(item, f)) : ""}</span></div>`;
+      h += `<div class="source-cell column-manual"><input type="text" ${f === "Genre" ? 'list="genreSuggestions"' : ""} class="typed-value ${ch === "manual" ? "active" : ""}" id="typed-${item.id}-${f}" aria-label="Typed ${f} for track ${item.id}" placeholder="Type a value" value="${esc(item.manual?.[f] ?? "")}" onfocus="activateManual(${item.id},'${f}',this.value)" oninput="setManual(${item.id},'${f}',this.value)"><span id="manual-error-${item.id}-${f}" class="muted" style="color:#b42318">${Object.hasOwn(item.manual || {}, f) ? esc(manualError(item, f)) : ""}</span></div>`;
     h += `<div class="final-value column-final" id="final-${item.id}-${f}">${esc(finalValue(item, f) || "—")}</div>`;
   }
   return (
@@ -80,9 +84,10 @@ function reviewHTML(item) {
       ? item.result._ai ? "" : `<p class="muted">API text match score: ${Math.round((item.result._score || 0) * 100)}/100 — artist/title similarity, not verified identification.</p>`
       : "") +
     (versionProtected(item)
-      ? `<span class="version-notice muted">Version title protected <span class="help-wrap"><button type="button" class="info-button" aria-label="Why this title is protected" aria-describedby="version-help-${item.id}">i</button><span id="version-help-${item.id}" class="help-tooltip" role="tooltip">A version word such as Clean, Extended, Remix, or Instrumental was found in this track’s title, file path, mix, or remixer. The original title is kept so a generic metadata title cannot remove that detail. Title selection and typing are disabled; other fields can still be edited. This is a text check, not audio identification.</span></span></span>`
+      ? `<span class="version-notice muted">Version title protected <span class="help-wrap"><button type="button" class="info-button" aria-label="Why this title is protected" aria-describedby="version-help-${item.id}">i</button><span id="version-help-${item.id}" class="help-tooltip" role="tooltip">A version word such as Clean, Extended, Remix, or Instrumental was found in this track’s title, file path, mix, or remixer. The original title is kept so a generic metadata title cannot remove that detail. API and saved-record title selection are disabled. You can explicitly edit the title using Type a value in Advanced mode. This is a text check, not audio identification.</span></span></span>`
       : "") +
     tagHTML(item) +
+    `<div class="row tag-review-actions"><span class="pill ${item.applied ? "applied" : esc(item.decision)}">${item.applied ? "applied" : esc(item.decision)}</span><button class="success" onclick="decide(${item.id},'accepted')" ${state.busy || !hasProposal(item) || invalidManual(item) || item.applied ? "disabled" : ""}>Accept</button><button class="danger" onclick="decide(${item.id},'rejected')" ${state.busy || item.applied ? "disabled" : ""}>Reject</button></div>` +
     (item.error
       ? `<p class="muted">Original API lookup: ${esc(item.error)}</p>`
       : "")

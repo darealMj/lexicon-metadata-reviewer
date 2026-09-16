@@ -1,3 +1,4 @@
+import { isNewTag } from "./tags.js";
 import {
   activateManual,
   allFields,
@@ -214,7 +215,9 @@ function drawOverrideTagPills() {
       if(state.busy)return;
       tags.splice(index,1);window.setPageOverride('CustomTags',tags.join(', '));drawOverrideTagPills();
     };
-    pill.append(text,remove);container.append(pill);
+    pill.append(text);
+    if(isNewTag(tag)){const badge=document.createElement("span");badge.className="new-tag-badge";badge.textContent="New";badge.title="Not in Lexicon yet. Created when this tag is applied.";pill.append(badge);}
+    pill.append(remove);container.append(pill);
   });
 }
 window.commitOverrideTags=(input,flush)=>{
@@ -238,4 +241,12 @@ window.setOverrideTagMode = enabled => {
   note.textContent=enabled?'Custom tags · Overwrite mode':'Custom tags · Additive mode';
   note.classList.toggle('overwrite',!!enabled);
   render();controls();
+};
+
+window.selectSuggestedTag = (id, input, event) => {
+  // Datalist selections use replacement text or a plain input event.
+  // Normal typing, pasting and composition must never commit an exact prefix.
+  if (!event || event.isComposing || (event.inputType && event.inputType !== "insertReplacementText")) return;
+  const options = document.querySelector("#genreSuggestions")?.options || [];
+  if ([...options].some(option => option.value === input.value)) addGenreTag(id);
 };
