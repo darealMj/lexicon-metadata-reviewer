@@ -6,6 +6,13 @@ from unittest.mock import patch
 import ai_tags
 
 class AITests(unittest.TestCase):
+    def test_unverified_candidate_is_preserved(self):
+        result = ai_tags.parse_metadata(json.dumps({'tags': [], 'title': None, 'candidate': {'title': 'Silver And Gold', 'artists': ['Luciano'], 'album': 'Hard Times Riddim', 'year': 2004}}))
+        self.assertEqual(result['title'], 'Silver And Gold')
+        self.assertEqual(result['album'], 'Hard Times Riddim')
+        self.assertTrue(result['conflicts'])
+        with self.assertRaises(ValueError):
+            ai_tags.parse_metadata(json.dumps({'tags': [], 'candidate': {'year': 'bad'}}))
     def test_schema(self):
         self.assertEqual(ai_tags.parse_tags('```json\n{"tags":[{"label":"House","confidence":0.8}]}\n```')[0]['label'],'House')
         for content in ['{"tags":[{"label":"x","confidence":true}]}','{"tags":[{"label":"x","confidence":NaN}]}','not json']:

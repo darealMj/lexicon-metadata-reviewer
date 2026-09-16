@@ -70,6 +70,7 @@ function invalidate(item) {
 }
 function bulkEligible(item) {
   return (
+    !hasSourceConflict(item.result) &&
     !item.usePageOverrides &&
     !!item.result &&
     item.tagMode !== "replace" &&
@@ -116,15 +117,25 @@ function proposed(r, f) {
 function fieldSource(r, f) {
   return r?._sources?.[f] || r?._source || "";
 }
+function fieldHasConflict(item, field, result) {
+  if (!hasSourceConflict(result)) return false;
+  const normalize = value => String(value ?? "").normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase();
+  const current = normalize(val(item.original, field));
+  const suggested = normalize(proposed(result, field));
+  return !!current && !!suggested && current !== suggested;
+}
+function hasSourceConflict(result) {
+  return !!result?._raw?.conflicts?.length || (result?._warnings || []).some(w => /^Source conflict:/i.test(w));
+}
 function initChoices(item) {
   item.tagMode ??= state.tagDefaults.tagMode;
   item.fields = {};
-  FIELDS.forEach((f) => (item.fields[f] = canUse(item, f) ? "api" : "current"));
+  FIELDS.forEach((f) => (item.fields[f] = !hasSourceConflict(item.result) && canUse(item, f) ? "api" : "current"));
   if(item.result?._ai){
     item.fields.Title='current';
     item.fields.Artist='current';
-    item.genreTags=(item.result._aiTags || []).map(t=>({label:t.label,enabled:true}));
-    item.mainGenre=item.result.strGenre || val(item.original,'Genre');
+    item.genreTags=(item.result._aiTags || []).map(t=>({label:t.label,enabled:!hasSourceConflict(item.result)}));
+    item.mainGenre=hasSourceConflict(item.result) ? val(item.original,'Genre') : item.result.strGenre || val(item.original,'Genre');
     return;
   }
   item.genreTags = splitGenres(proposed(item.result, "Genre"));
@@ -160,6 +171,8 @@ export {
   trackId,
   proposed,
   fieldSource,
+  fieldHasConflict,
+  hasSourceConflict,
   initChoices,
   finalValue,
   syncMainGenre,

@@ -227,8 +227,8 @@ window.chooseDiscogs=async(id,releaseId)=>{
   catch(e){item.error=e.message;}
   finally{setBusy(false);render();controls();}
 };
-async function lookupAI(artist, title) {
-  const response=await fetch('/metadata/ai/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({artist,title})});
+async function lookupAI(artist, title, currentAlbum = "") {
+  const response=await fetch('/metadata/ai/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({artist,title,...(currentAlbum.trim() ? {current_album:currentAlbum.trim()} : {})})});
   const data=await response.json();if(!response.ok)throw new Error(data.error || 'AI lookup failed');
   const r=data.result;
   return registerRecord({strTrack:r.title || '',strArtist:(r.artists || []).join(', '),strAlbum:r.album || '',strGenre:r.main_genre || '',intYearReleased:r.year || '',intTrackNumber:'',strLabel:r.label || '',
@@ -310,7 +310,7 @@ async function metadataLookup(item, audioKey, svKey, mode) {
     return;
   }
   const get = async (src) =>
-    src === "discogs" ? lookupDiscogs(item) : src === "ai" ? lookupAI(artist,title) : src === "audiodb"
+    src === "discogs" ? lookupDiscogs(item) : src === "ai" ? lookupAI(artist,title,String(val(item.original,"AlbumTitle") || "")) : src === "audiodb"
       ? lookupAudioDB(artist, title, audioKey)
       : lookupSonovault(artist, title, svKey);
   const pair = [...new Set(mode.split("-").filter(Boolean))];
