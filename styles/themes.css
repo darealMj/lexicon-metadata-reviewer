@@ -847,3 +847,6 @@ input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+.source-cell.source-conflict { box-shadow: inset 3px 0 #d65768; background: color-mix(in srgb, #d65768 15%, var(--panel)); }
+.conflict-label { display: block; font-size: 11px; margin-top: 5px; color: var(--text); font-weight: 600; }

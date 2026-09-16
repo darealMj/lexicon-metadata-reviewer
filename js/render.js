@@ -1,5 +1,6 @@
 import { FIELDS, PAGE_SIZE, esc, val } from "./utils.js";
 import {
+  fieldHasConflict,
   effectiveTagMode,
   bulkEligible,
   canUse,
@@ -71,7 +72,7 @@ function reviewHTML(item) {
         ? [["record", "Record", proposed(item.reference, f)]]
         : []),
     ])
-      h += `<div class="source-cell column-${choice}"><button data-field="${f}" data-choice="${choice}" aria-label="Use ${label} for ${f} on track ${item.id}" aria-pressed="${ch === choice}" class="source-value ${ch === choice ? "active" : ""}" onclick="fieldChoice(${item.id},'${f}','${choice}')" ${choice !== "current" && !canUse(item, f, choice) ? "disabled" : ""}>${esc(value || "—")}</button></div>`;
+      h += `<div class="source-cell column-${choice} ${choice !== "current" && fieldHasConflict(item, f, choice === "record" ? item.reference : item.result) ? "source-conflict" : ""}"><button data-field="${f}" data-choice="${choice}" aria-label="Use ${label} for ${f} on track ${item.id}" aria-pressed="${ch === choice}" class="source-value ${ch === choice ? "active" : ""}" onclick="fieldChoice(${item.id},'${f}','${choice}')" ${choice !== "current" && !canUse(item, f, choice) ? "disabled" : ""}>${esc(value || "—")}${value && choice !== "current" && fieldHasConflict(item, f, choice === "record" ? item.reference : item.result) ? '<span class="conflict-label">Review conflict</span>' : ""}</button></div>`;
     if (state.advanced)
       h += `<div class="source-cell column-manual"><input type="text" ${f === "Genre" ? 'list="genreSuggestions"' : ""} class="typed-value ${ch === "manual" ? "active" : ""}" id="typed-${item.id}-${f}" aria-label="Typed ${f} for track ${item.id}" placeholder="Type a value" value="${esc(item.manual?.[f] ?? "")}" onfocus="activateManual(${item.id},'${f}',this.value)" oninput="setManual(${item.id},'${f}',this.value)"><span id="manual-error-${item.id}-${f}" class="muted" style="color:#b42318">${Object.hasOwn(item.manual || {}, f) ? esc(manualError(item, f)) : ""}</span></div>`;
     h += `<div class="final-value column-final" id="final-${item.id}-${f}">${esc(finalValue(item, f) || "—")}</div>`;
