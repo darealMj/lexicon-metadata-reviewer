@@ -27,7 +27,7 @@ function versionProtected(item) {
   );
 }
 function canUse(item, f, choice = "api") {
-  if (f === "Title" && versionProtected(item)) return false;
+  if (f === "Title" && choice !== "manual" && versionProtected(item)) return false;
   if (choice === "manual")
     return Object.hasOwn(item.manual || {}, f) && !manualError(item, f);
   return !!proposed(choice === "record" ? item.reference : item.result, f);

@@ -498,3 +498,7 @@ button.is-loading:disabled { opacity: 1; cursor: progress; }
 .page-overrides .override-mode-toggle input { width:auto; margin:0; }
 .override-mode-note { padding:8px 10px; border-radius:7px; font-size:11px; font-weight:600; background:#269f7120; color:inherit; border:1px solid #269f7170; }
 .override-mode-note.overwrite { background:#d6982520; border-color:#d6982580; }
+
+.new-tag-badge { font-size: 10px; font-weight: 600; opacity: .7; border: 1px solid currentColor; border-radius: 4px; padding: 1px 4px; margin-left: 5px; }
+.tag-review-actions { justify-content: flex-end; margin-top: 10px; }
+.tag-review-actions button { padding: 5px 10px; font-size: 12px; }
