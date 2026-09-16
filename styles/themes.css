@@ -818,3 +818,32 @@ input:focus-visible {
 :root:not([data-theme]) .page-overrides .override-color-3 { background:#f5e9cc; color:#67501b; border-color:#d9c28b; }
 :root:not([data-theme]) .page-overrides .override-color-4 { background:#eae1f5; color:#543578; border-color:#c6b2df; }
 }
+
+/* Match the Incoming switch to the adjacent labeled search fields. */
+#lexPanel .incoming-filter {
+  flex: 0 0 auto;
+  align-self: flex-end;
+}
+.incoming-filter-control {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 38px;
+  box-sizing: border-box;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--canvas);
+  cursor: pointer;
+}
+#lexPanel .incoming-filter-control input {
+  flex: 0 0 34px;
+  margin: 0;
+}
+#lexPanel .incoming-filter-control input:checked {
+  background: var(--accent);
+}
+.incoming-filter-control:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

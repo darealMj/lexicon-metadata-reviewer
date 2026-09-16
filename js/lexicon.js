@@ -72,7 +72,7 @@ async function loadPage(offset = 0) {
       tracks = state.searchTracks.slice(offset, offset + PAGE_SIZE);
       total = state.searchTracks.length;
     } else {
-      const d = await api(`/v1/tracks?limit=${PAGE_SIZE}&offset=${offset}${$("#trackScope").value === "incoming" ? "&source=incoming" : ""}`);
+      const d = await api(`/v1/tracks?limit=${PAGE_SIZE}&offset=${offset}${$("#trackScope").checked ? "&source=incoming" : ""}`);
       tracks = unwrapList(d);
       total = Number(payload(d)?.total ?? tracks.length);
     }
@@ -104,7 +104,7 @@ async function loadFirst() {
 }
 function searchQuery() {
   const q = new URLSearchParams();
-  if ($("#trackScope").value === "incoming") q.set("source", "incoming");
+  if ($("#trackScope").checked) q.set("source", "incoming");
   for (const [field, input] of [
     ["artist", lexArtist],
     ["title", lexTitle],
