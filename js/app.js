@@ -93,11 +93,7 @@ applyTheme();
 loadTracks.onclick = loadFirst;
 lexSearch.onclick = searchLexicon;
 const trackScope = document.querySelector("#trackScope");
-trackScope.value = localStorage.getItem("trackScope") === "incoming" ? "incoming" : "non-archived";
-trackScope.onchange = () => {
-  localStorage.setItem("trackScope", trackScope.value);
-  if (state.connected && !state.busy) searchLexicon();
-};
+trackScope.checked = false;
 searchBtn.onclick = lookupAll;
 acceptAll.onclick = () => {
   if (state.busy) return;

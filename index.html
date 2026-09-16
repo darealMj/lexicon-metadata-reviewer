@@ -78,7 +78,7 @@
               list="tagSuggestions"
               placeholder="Start typing a tag name" /></label
           ><datalist id="genreSuggestions"></datalist><datalist id="tagSuggestions"></datalist
-          ><label style="flex:0 0 auto">Track scope<select id="trackScope" style="width:auto;min-width:140px"><option value="non-archived">Library</option><option value="incoming">Incoming only</option></select></label>
+          ><label class="incoming-filter"><span>Incoming tracks</span><span class="incoming-filter-control"><input id="trackScope" type="checkbox" role="switch" aria-label="Incoming tracks only"><span>Incoming only</span></span></label>
         </div>
         <div class="row">
           <span class="action-with-help"><button id="lexSearch" aria-describedby="help-search" disabled>Search Lexicon</button><span class="help-wrap"

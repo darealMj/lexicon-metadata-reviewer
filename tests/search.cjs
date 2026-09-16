@@ -12,14 +12,14 @@ run('lexTag.value="regg"');assert.throws(()=>run('searchQuery()'),/Several tags/
 run('lexTag.value="unknown-tag"');assert.throws(()=>run('searchQuery()'),/No custom tag/);
 run('lexTag.value=""');assert.equal(new URLSearchParams(run('searchQuery().toString()')).has('filter[tags]'),false);
 console.log('PASS: combined search filters, album field mapping, exact and unique partial tag labels, ambiguous/missing tag errors, and blank tag omission.');
-run('lexTag.value="";document.querySelector("#trackScope").value="incoming"');
+run('lexTag.value="";document.querySelector("#trackScope").checked=true');
 assert.equal(run('searchQuery().get("source")'),'incoming');
 (async()=>{
   run('state.busy=false;state.pageKind="library";api=async path=>{globalThis.scopeRequest=path;return {data:{tracks:[],total:250}}}');
   await run('loadPage(100)');
   assert.ok(run('scopeRequest').includes('source=incoming'));
   assert.ok(run('scopeRequest').includes('offset=100'));
-  run('document.querySelector("#trackScope").value="non-archived"');
+  run('document.querySelector("#trackScope").checked=false');
   assert.equal(run('searchQuery().get("source")'),null);
   await run('loadFirst()');
   assert.ok(!run('scopeRequest').includes('source=incoming'));
