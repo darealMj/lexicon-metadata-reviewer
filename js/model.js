@@ -127,6 +127,19 @@ function fieldHasConflict(item, field, result) {
 function hasSourceConflict(result) {
   return !!result?._raw?.conflicts?.length || (result?._warnings || []).some(w => /^Source conflict:/i.test(w));
 }
+function canAutoSelectTags(result) {
+  const conflicts = [
+    ...(result?._raw?.conflicts || []),
+    ...(result?._warnings || []).filter(w => /^Source conflict:/i.test(w)),
+  ];
+  // Only explicitly title-related warnings are harmless to tag selection.
+  // Unknown conflicts, tag disputes and uncertain identities still need review.
+  return conflicts.every(message => {
+    const text = String(message).replace(/^Source conflict:\s*/i, "");
+    return /^title\b/i.test(text) &&
+      !/\b(genre|subgenre|tags?|mood|mix|identity|unverified|uncertain|ambiguous|different (?:song|track|recording)|multiple (?:songs|tracks|candidates)|not (?:established|confirmed|verified))\b/i.test(text);
+  });
+}
 function initChoices(item) {
   item.tagMode ??= state.tagDefaults.tagMode;
   item.fields = {};
@@ -134,7 +147,7 @@ function initChoices(item) {
   if(item.result?._ai){
     item.fields.Title='current';
     item.fields.Artist='current';
-    item.genreTags=(item.result._aiTags || []).map(t=>({label:t.label,enabled:!hasSourceConflict(item.result)}));
+    item.genreTags=(item.result._aiTags || []).map(t=>({label:t.label,enabled:canAutoSelectTags(item.result)}));
     item.mainGenre=hasSourceConflict(item.result) ? val(item.original,'Genre') : item.result.strGenre || val(item.original,'Genre');
     return;
   }

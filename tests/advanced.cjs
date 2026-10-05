@@ -30,7 +30,7 @@ assert.equal(run('document.querySelector("#extra-1").value'),"");
 run('rows[0].result={_ai:true,strAlbum:"Hard Times Riddim",strGenre:"Reggae",_aiTags:[{label:"Reggae"}],_raw:{conflicts:["Title mismatch"]}};initChoices(rows[0])');
 assert.equal(run('rows[0].fields.AlbumTitle'),"current");
 assert.equal(run('rows[0].fields.Genre'),"current");
-assert.equal(run('rows[0].genreTags[0].enabled'),false);
+assert.equal(run('rows[0].genreTags[0].enabled'),true);
 assert.equal(run('bulkEligible(rows[0])'),false);
 assert.ok(!run('reviewHTML(rows[0])').includes('Review conflict'));
 run('window.fieldChoice(1,"AlbumTitle","api")');
@@ -42,5 +42,16 @@ assert.equal(run('fieldHasConflict(rows[0],"Artist",rows[0].result)'),false);
 assert.equal(run('fieldHasConflict(rows[0],"AlbumTitle",rows[0].result)'),false);
 assert.equal(run('fieldHasConflict(rows[0],"Year",rows[0].result)'),false);
 assert.equal(run('fieldHasConflict(rows[0],"Label",rows[0].result)'),false);
+for (const conflict of ["Genre: Reggae vs Dancehall", "Unverified candidate match", "Title: different song", "Unknown source conflict"]) {
+  context.conflictForTest = conflict;
+  run('rows[0].result._raw.conflicts=[conflictForTest];initChoices(rows[0])');
+  assert.equal(run('rows[0].genreTags[0].enabled'),false,conflict);
+}
+run('rows[0].result._raw.conflicts=[];rows[0].result._warnings=["Source conflict: Title formatting differs"];initChoices(rows[0])');
+assert.equal(run('rows[0].genreTags[0].enabled'),true);
+run('rows[0].result._warnings=["Source conflict: Genre differs"];initChoices(rows[0])');
+assert.equal(run('rows[0].genreTags[0].enabled'),false);
+run('rows[0].result._warnings=[];initChoices(rows[0]);window.allFields(1,"current")');
+assert.equal(run('rows[0].genreTags[0].enabled'),false);
 console.log('PASS: Advanced gating, typed values, numeric validation, protected titles, tag select/clear all, approval reset, hidden selection reset, explicit text clearing and mocked writes.');
 })().catch(e=>{console.error(e);process.exit(1)});
