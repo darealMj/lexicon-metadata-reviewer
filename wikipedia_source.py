@@ -68,10 +68,17 @@ def lookup(artist,title,context):
     base=search_metadata(artist,title)['title']
     try:
         hits=api({'action':'query','list':'search','srsearch':f'"{base}" "{artist}"','srlimit':3,'srnamespace':0},context)['query']['search']
+        # Search ranking can omit the exact song page; try its title as fallback.
+        if not any(norm(hit['title'].split(' (')[0]) == norm(base) for hit in hits):
+            hits.append({'title':base, 'direct_title':True})
         matches=[]
         for hit in hits:
             if norm(hit['title'].split(' (')[0])!=norm(base):continue
-            page=api({'action':'parse','pageid':hit['pageid'],'prop':'text|revid','section':0},context)['parse']
+            try:
+                identity = {'page':base} if hit.get('direct_title') else {'pageid':hit['pageid']}
+                page=api({'action':'parse',**identity,'prop':'text|revid','section':0},context)['parse']
+            except Exception:
+                continue
             fields=extract(page['text'],page['title'],artist,base)
             if fields:
                 matches.append({'status':'matched','title':page['title'],'url':'https://en.wikipedia.org/wiki/'+quote(page['title'].replace(' ','_')),
