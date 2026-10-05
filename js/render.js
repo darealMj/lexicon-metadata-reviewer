@@ -94,6 +94,11 @@ function reviewHTML(item) {
       : "")
   );
 }
+function debugGenreLink(artist, title) {
+  if (!state.debugMode) return "";
+  const query = [title, artist, "genre"].filter(Boolean).join(" ");
+  return `<a class="debug-genre-link" href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" rel="noopener noreferrer" title="Search Google for this track’s genre (opens in a new tab)" aria-label="Search Google for this track’s genre (opens in a new tab)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>`;
+}
 function render() {
   tbody.innerHTML = state.rows
     .map((item) => {
@@ -108,7 +113,7 @@ function render() {
               ? "rejected"
               : "pending";
       const label = item.applied ? "applied" : item.decision;
-      return `<tr data-row-id="${item.id}"><td>${item.id}</td><td><div class="track-title">${esc(a)} – ${esc(t)}</div>${l ? `<div class="muted location">${esc(l)}</div>` : ""}${item.lexiconId ? `<div class="muted">Lexicon ID: ${esc(item.lexiconId)}</div>` : ""}<div class="track-decisions"><label><input type="checkbox" ${item.usePageOverrides ? "checked" : ""} ${item.applied ? "disabled" : ""} onchange="togglePageOverride(${item.id},this.checked)"> Use page overrides</label><span class="pill ${cls}">${label}</span><div class="actions"><button class="success" onclick="decide(${item.id},'accepted')" ${!hasProposal(item) || invalidManual(item) || item.applied ? "disabled" : ""}>Accept</button><button class="danger" onclick="decide(${item.id},'rejected')">Reject</button>${hasProposal(item) ? `<button class="secondary" onclick="allFields(${item.id},'api')" ${!item.result ? "disabled" : ""}>All API</button><button class="secondary" onclick="allFields(${item.id},'current')">All current</button>` : ""}</div></div></td><td>${reviewHTML(item)}</td></tr>`;
+      return `<tr data-row-id="${item.id}"><td>${item.id}</td><td><div class="track-title">${esc(a)} – ${esc(t)} ${debugGenreLink(a,t)}</div>${l ? `<div class="muted location">${esc(l)}</div>` : ""}${item.lexiconId ? `<div class="muted">Lexicon ID: ${esc(item.lexiconId)}</div>` : ""}<div class="track-decisions"><label><input type="checkbox" ${item.usePageOverrides ? "checked" : ""} ${item.applied ? "disabled" : ""} onchange="togglePageOverride(${item.id},this.checked)"> Use page overrides</label><span class="pill ${cls}">${label}</span><div class="actions"><button class="success" onclick="decide(${item.id},'accepted')" ${!hasProposal(item) || invalidManual(item) || item.applied ? "disabled" : ""}>Accept</button><button class="danger" onclick="decide(${item.id},'rejected')">Reject</button>${hasProposal(item) ? `<button class="secondary" onclick="allFields(${item.id},'api')" ${!item.result ? "disabled" : ""}>All API</button><button class="secondary" onclick="allFields(${item.id},'current')">All current</button>` : ""}</div></div></td><td>${reviewHTML(item)}</td></tr>`;
     })
     .join("");
   const m = state.rows.filter((r) => r.result).length,

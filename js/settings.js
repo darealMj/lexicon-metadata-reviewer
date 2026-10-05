@@ -109,7 +109,7 @@ async function saveSettings() {
             (changes.overwrite_custom_tags ? "On" : "Off"),
           "Include Mix tags from title: " +
             (changes.include_mix_tags_from_title ? "On" : "Off"),
-          "Show debug log: " + (changes.show_debug_log ? "On" : "Off"),
+          "Debug mode: " + (changes.show_debug_log ? "On" : "Off"),
           ...(changes.discogs_api_key ? ["Replace Discogs token"] : []),
           ...(changes.sonovault_api_key ? ["Replace SonoVault API key"] : []),
           ...(changes.audiodb_api_key ? ["Replace TheAudioDB API key"] : []),
@@ -133,6 +133,7 @@ async function saveSettings() {
       includeMix: data.include_mix_tags_from_title,
     };
     applyTheme(data.theme);
+    state.debugMode = data.show_debug_log === true;
     setAdvanced(data.advanced_mode);
     $("#debugPanel").classList.toggle("hidden", !data.show_debug_log);
     configStatus.textContent = data.sonovault_configured
@@ -157,6 +158,7 @@ async function loadLocalSettings() {
       includeMix: settings.include_mix_tags_from_title !== false,
     };
     advancedMode.checked = settings.advanced_mode === true;
+    state.debugMode = settings.show_debug_log === true;
     setAdvanced(advancedMode.checked);
     $("#debugPanel").classList.toggle("hidden", !settings.show_debug_log);
     configStatus.textContent = settings.sonovault_configured
