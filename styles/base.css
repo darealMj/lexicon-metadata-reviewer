@@ -502,3 +502,6 @@ button.is-loading:disabled { opacity: 1; cursor: progress; }
 .new-tag-badge { font-size: 10px; font-weight: 600; opacity: .7; border: 1px solid currentColor; border-radius: 4px; padding: 1px 4px; margin-left: 5px; }
 .tag-review-actions { justify-content: flex-end; margin-top: 10px; }
 .tag-review-actions button { padding: 5px 10px; font-size: 12px; }
+
+.debug-genre-link { display: inline-flex; vertical-align: middle; align-items: center; padding: 4px; border-radius: 4px; color: var(--muted); }
+.debug-genre-link:hover, .debug-genre-link:focus-visible { color: var(--accent); background: var(--panel); }

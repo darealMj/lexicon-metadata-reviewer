@@ -1,6 +1,7 @@
 const state = {
   sourceRecords: new Map(),
   advanced: false,
+  debugMode: false,
   tagDefaults: {
     tagMode: "add",
     includeMix: true,
